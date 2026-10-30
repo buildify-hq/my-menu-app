@@ -4,78 +4,44 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="theme-color" content="#d97706" />
-<title>MyQRMenu - Premium Digital Menu</title>
+<title>MyQRMenu - Digital QR Menu System</title>
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config = { darkMode: "class" }</script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+<!-- React 18 & ReactDOM -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<!-- Babel for JSX -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<!-- Firebase 9 Compat SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<!-- SheetJS for Excel Export -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-:root { --brand: #d97706; --brand-dark: #b45309; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; overscroll-behavior-y: contain; transition: background 0.3s; }
-.dark body { background: #0f172a; color: #f8fafc; }
-.dark .bg-white { background: #1e293b !important; }
-.dark .bg-slate-50 { background: #0f172a !important; }
-.dark .bg-slate-100 { background: #334155 !important; }
-.dark .border-slate-200 { border-color: #334155 !important; }
-.dark .border-slate-100 { border-color: #334155 !important; }
-.dark .text-slate-900 { color: #f8fafc !important; }
-.dark .text-slate-500 { color: #94a3b8 !important; }
-.dark .text-slate-700 { color: #cbd5e1 !important; }
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-.btn-brand { background: var(--brand); color: white; border-radius: 16px; font-weight: 700; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3); }
-.btn-brand:hover { background: var(--brand-dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(217, 119, 6, 0.4); }
-.btn-brand:active { transform: scale(0.97); }
-.btn-danger { background: #ef4444; color: white; border-radius: 16px; font-weight: 700; transition: all 0.2s; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
-.btn-danger:hover { background: #dc2626; }
-.btn-danger:active { transform: scale(0.97); }
-.text-brand { color: var(--brand); }
-.bg-brand { background: var(--brand); }
-.sheet-enter { animation: sheet-up .4s cubic-bezier(.16,1,.3,1); }
-@keyframes sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.fade-in { animation: fade-in .3s; }
-@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-.fade-up { animation: fade-up .4s cubic-bezier(.16,1,.3,1); }
-@keyframes fade-up { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-.skeleton { background: linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 16px; }
-.dark .skeleton { background: linear-gradient(90deg,#1e293b 25%,#334155 50%,#1e293b 75%); background-size: 200% 100%; }
-@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-.bottom-tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,.85); backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,.05); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 40; }
-.dark .bottom-tab-bar { background: rgba(30,41,59,.85); border-color: #334155; }
-.tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; flex: 1; position: relative; }
-.tab-item.active .tab-label { color: var(--brand); font-weight: 800; }
-.tab-item.active::after { content: ''; position: absolute; top: 0; width: 24px; height: 3px; background: var(--brand); border-radius: 0 0 4px 4px; }
-.pulse-ring { animation: pulse-ring 1.5s infinite; }
-@keyframes pulse-ring { 0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)} 70%{box-shadow:0 0 0 15px rgba(239,68,68,0)} 100%{box-shadow:0 0 0 0 rgba(239,68,68,0)} }
-.glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.05); }
-.dark .glass-card { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  @media print {
+    body * { visibility: hidden; }
+    #printable-qr-stand, #printable-qr-stand * { visibility: visible; }
+    #printable-qr-stand { position: absolute; left: 0; top: 0; width: 100%; }
+  }
 </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
+<body class="bg-stone-50 text-stone-900 min-h-screen">
 <div id="root">
   <div class="min-h-screen flex items-center justify-center">
     <div class="text-center p-6 space-y-3">
-      <div class="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-      <p class="text-sm font-bold text-slate-600">Loading MyQRMenu...</p>
+      <div class="w-10 h-10 border-4 border-amber-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <p class="text-sm font-semibold text-stone-700">Connecting to MyQRMenu...</p>
     </div>
   </div>
 </div>
 
-<script>
-window.onerror = function(msg) {
-  document.getElementById('root').innerHTML = '<div style="padding:20px;text-align:center;margin-top:50px;"><h2 style="color:#dc2626;">⚠️ Error</h2><p style="font-weight:bold;">' + msg + '</p><button onclick="location.reload()" style="margin-top:20px;padding:10px 20px;background:#d97706;color:white;border:none;border-radius:8px;font-weight:bold;">Reload</button></div>';
-  return false;
-};
-</script>
+<script type="text/babel">
+const { useState, useEffect, useMemo, useRef } = React;
 
-<script>
-const { useState, useEffect, useMemo, useRef, createContext, useContext } = React;
-
-// तुझा Firebase Config इथे टाकला आहे
+// Firebase Config (तुमचा कोड)
 const firebaseConfig = {
   apiKey: "AIzaSyDL_AyEqlAZr7mafIN3J5AMV2n3uShEeW8",
   authDomain: "menu-qr-b8765.firebaseapp.com",
@@ -87,948 +53,697 @@ const firebaseConfig = {
 };
 
 let app = null, db = null, isFB = false;
-try { app = firebase.initializeApp(firebaseConfig); db = firebase.firestore(); isFB = true; }
-catch (e) { console.warn("FB offline:", e); }
+try {
+  app = firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  isFB = true;
+} catch (e) { console.warn("FB offline:", e); }
 
-const I18N = {
-  en: { menu:"Menu", cart:"Cart", orders:"Orders", settings:"Settings", home:"Home", addToCart:"Add", placeOrder:"Place Order", search:"Search dishes...", table:"Table", total:"Total", pending:"Pending", preparing:"Cooking", ready:"Ready", completed:"Completed", cancel:"Cancel", delete:"Delete", edit:"Edit", save:"Save", logout:"Logout", active:"Active", expired:"Expired", staff:"Staff", revenue:"Revenue", addDish:"Add Dish", editDish:"Edit Dish", deleteDish:"Delete Dish", dishName:"Dish Name", price:"Price", category:"Category", description:"Description", uploadImage:"Gallery", imgUrl:"Image URL", markPaid:"Mark Paid", markUnpaid:"Mark Unpaid", archive:"Download & Clear", exportXLSX:"Export Excel", printMenu:"Print PDF Menu", orderPlaced:"Order Placed!", newOrders:"NEW ORDERS", cooking:"COOKING", readyServe:"READY", dailySales:"Daily Sales", weeklySales:"Weekly Sales", monthlySales:"Monthly Sales", totalOrders:"Total Orders", orderHistory:"Order History", bestSellers:"Best Selling Dishes", paidStatus:"Paid/Unpaid", cashPayment:"Cash Payment" },
-  mr: { menu:"मेनू", cart:"कार्ट", orders:"ऑर्डर्स", settings:"सेटिंग्ज", home:"होम", addToCart:"घाला", placeOrder:"ऑर्डर करा", search:"डिश शोधा...", table:"टेबल", total:"एकूण", pending:"प्रलंबित", preparing:"तयार होतंय", ready:"तयार", completed:"पूर्ण", cancel:"रद्द", delete:"काढा", edit:"बदला", save:"जतन करा", logout:"बाहेर पडा", active:"सक्रिय", expired:"कालबाह्य", staff:"स्टाफ", revenue:"उत्पन्न", addDish:"डिश जोडा", editDish:"डिश बदला", deleteDish:"डिश काढा", dishName:"डिशचं नाव", price:"किंमत", category:"प्रकार", description:"माहिती", uploadImage:"गॅलरी", imgUrl:"इमेज लिंक", markPaid:"पैसे मिळाले", markUnpaid:"पैसे बाकी", archive:"डाउनलोड आणि हिस्ट्री डिलीट", exportXLSX:"Excel काढा", printMenu:"PDF मेनू प्रिंट", orderPlaced:"ऑर्डर झाली!", newOrders:"नवीन ऑर्डर्स", cooking:"किचनमध्ये", readyServe:"तयार", dailySales:"दैनिक विक्री", weeklySales:"साप्ताहिक विक्री", monthlySales:"मासिक विक्री", totalOrders:"एकूण ऑर्डर्स", orderHistory:"ऑर्डर हिस्ट्री", bestSellers:"सर्वाधिक विकली जाणारी डिश", paidStatus:"पैसे मिळाले/बाकी", cashPayment:"रोख पेमेंट" },
+const DEFAULT_RESTAURANTS = [
+  { id: "rest-101", name: "Sagar's Cafe", tagline: "Fresh Brews & Bites", ownerPin: "111111", kitchenPin: "222222", subscriptionStatus: "ACTIVE", dueDate: new Date(Date.now() + 30 * 864e5).toISOString().split("T")[0], isMenuActive: true, isOrdersActive: true },
+  { id: "rest-102", name: "Spice Craft Bistro", tagline: "Modern Fusion", ownerPin: "333333", kitchenPin: "444444", subscriptionStatus: "EXPIRED", dueDate: new Date(Date.now() - 3 * 864e5).toISOString().split("T")[0], isMenuActive: true, isOrdersActive: true }
+];
+
+const daysLeft = (d) => { if(!d) return 0; return Math.ceil((new Date(d).getTime() - Date.now()) / 864e5); };
+const formatTime = (seconds) => {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s < 10 ? '0' : ''}${s}`;
 };
-const LangCtx = createContext({ lang: "en", t: (k)=>I18N.en[k]||k });
-const useT = () => useContext(LangCtx);
 
-const SK = "myqrmenu_session", AK = "myqrmenu_attempts", TK = "myqrmenu_theme", LK = "myqrmenu_lang";
-const TTL = 8 * 3600000;
-const MAX_ATTEMPTS = 5;
-const BLOCK_MS = 30000;
+// Web Audio API for Kitchen Alert
+const playBeep = () => {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [880, 1100].forEach((freq, i) => {
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = "sine"; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.25);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.25 + 0.4);
+      osc.start(ctx.currentTime + i * 0.25);
+      osc.stop(ctx.currentTime + i * 0.25 + 0.4);
+    });
+  } catch (e) {}
+};
 
-function saveSession(s) { try { localStorage.setItem(SK, JSON.stringify({ ...s, exp: Date.now() + TTL })); } catch(e){} }
-function loadSession() { try { const r = localStorage.getItem(SK); if(!r) return null; const s = JSON.parse(r); if(s.exp && s.exp < Date.now()){ localStorage.removeItem(SK); return null; } return s; } catch(e){ return null; } }
-function clearSession() { try { localStorage.removeItem(SK); } catch(e){} }
-function getAttempts() { try { const r = localStorage.getItem(AK); return r ? JSON.parse(r) : { count: 0, blockedUntil: 0 }; } catch(e){ return { count: 0, blockedUntil: 0 }; } }
-function recordFail() { const a = getAttempts(); a.count = (a.count||0) + 1; if (a.count >= MAX_ATTEMPTS) { a.blockedUntil = Date.now() + BLOCK_MS; a.count = 0; } try { localStorage.setItem(AK, JSON.stringify(a)); } catch(e){} return a; }
-function resetAttempts() { try { localStorage.removeItem(AK); } catch(e){} }
-function isBlocked() { const a = getAttempts(); if (a.blockedUntil && a.blockedUntil > Date.now()) return { blocked: true, remaining: Math.ceil((a.blockedUntil - Date.now())/1000) }; if (a.blockedUntil && a.blockedUntil <= Date.now()) resetAttempts(); return { blocked: false }; }
-
-const daysLeft = (d) => { if(!d || d === "N/A") return 0; return Math.ceil((new Date(d).getTime() - Date.now())/864e5); };
-const fmtTime = (s) => String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
-function playBeep() { try { const c = new (window.AudioContext||window.webkitAudioContext)(); [880, 1100].forEach((f,i) => { const o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.frequency.value = f; o.type = "sine"; g.gain.setValueAtTime(0.4, c.currentTime + i*0.25); g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + i*0.25 + 0.4); o.start(c.currentTime + i*0.25); o.stop(c.currentTime + i*0.25 + 0.4); }); } catch(e){} }
-function fileToBase64(file, maxSize=300) { return new Promise((resolve) => { const r = new FileReader(); r.onload = (e) => { const img = new Image(); img.onload = () => { const c = document.createElement("canvas"); let w = img.width, h = img.height; if (w > maxSize || h > maxSize) { const ratio = Math.min(maxSize/w, maxSize/h); w *= ratio; h *= ratio; } c.width = w; c.height = h; c.getContext("2d").drawImage(img, 0, 0, w, h); resolve(c.toDataURL("image/jpeg", 0.4)); }; img.src = e.target.result; }; r.readAsDataURL(file); }); }
-
-const mapItem = (id, d) => ({ id: id || d.id, name: d.name || "Untitled", description: d.description || "", price: typeof d.price === "number" ? d.price : parseFloat(d.price) || 0, category: d.category || "Mains", imageUrl: d.image || d.imageUrl || "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80", isVegetarian: d.type === "veg" || d.isVegetarian === true, isSoldOut: d.isSoldOut === true, available: d.available !== false });
-const parseOrder = (id, d) => ({ id, tokenNumber: d.tokenNumber || "TB-" + id.slice(0,4), tableNumber: d.tableNumber || 1, items: d.items || [], totalAmount: +d.totalAmount || 0, status: (d.status || "PENDING").toUpperCase(), paymentStatus: d.paymentStatus || "UNPAID", specialInstructions: d.specialInstructions || "", createdAt: d.createdAt || "", timestamp: d.timestamp || 0, estimatedTime: d.estimatedTime || 15 });
+// Helper for Image Compression
+const compressImage = (file, maxSize = 200) => new Promise((resolve) => {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      let w = img.width, h = img.height;
+      if (w > maxSize || h > maxSize) {
+        const ratio = Math.min(maxSize / w, maxSize / h);
+        w *= ratio; h *= ratio;
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL("image/jpeg", 0.5));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+});
 
 function App() {
   const qp = new URLSearchParams(window.location.search);
-  const urlRestId = qp.get("restId") || "";
+  const urlRestId = qp.get("restId") || "rest-101";
   const urlTable = parseInt(qp.get("table") || "5", 10);
-  const isStaff = window.location.pathname.toLowerCase().replace(/\/+$/, "").endsWith("/staff") || qp.get("staff") === "true";
-  const savedSession = loadSession();
+  const isStaffRoute = window.location.pathname.toLowerCase().endsWith("/staff") || qp.get("staff") === "true";
 
-  const [currentRestId, setCurrentRestId] = useState(savedSession?.restaurantId || urlRestId);
-  const [currentTable] = useState(urlTable);
-  const [restaurants, setRestaurants] = useState([]);
-  const [lang, setLang] = useState(() => localStorage.getItem(LK) || "en");
-  const [dark, setDark] = useState(() => localStorage.getItem(TK) === "dark");
-  const [currentView, setCurrentView] = useState(() => {
-    if (savedSession?.role === "admin") return "admin";
-    if (savedSession?.role === "owner") return "owner";
-    if (savedSession?.role === "kitchen") return "kitchen";
-    if (isStaff) return "login";
-    return "customer";
-  });
-
-  const t = (k) => (I18N[lang] || I18N.en)[k] || I18N.en[k] || k;
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-    localStorage.setItem(TK, dark ? "dark" : "light");
-  }, [dark]);
-  useEffect(() => { localStorage.setItem(LK, lang); }, [lang]);
+  const [currentRestId, setCurrentRestId] = useState(urlRestId);
+  const [restaurants, setRestaurants] = useState(DEFAULT_RESTAURANTS);
+  const [view, setView] = useState(isStaffRoute ? "login" : "customer");
 
   useEffect(() => {
     if (!isFB) return;
-    const checkAndSeed = async () => {
-      try {
-        const snap = await db.collection("restaurants").limit(1).get();
-        if (snap.empty) {
-          await db.collection("restaurants").doc("rest-101").set({
-            name: "Sagar's Cafe", ownerPin: "111111", kitchenPin: "222222",
-            subscriptionStatus: "ACTIVE", dueDate: new Date(Date.now()+30*864e5).toISOString().split("T")[0],
-            isMenuActive: true, isOrdersActive: true, themeColor: "#d97706", upiId: "", taxRate: 5, taxIncluded: false, showTax: true, tagline: "Fresh Brews & Bites"
-          });
-          await db.collection("restaurants").doc("rest-102").set({
-            name: "Spice Craft Bistro", ownerPin: "333333", kitchenPin: "444444",
-            subscriptionStatus: "EXPIRED", dueDate: new Date(Date.now()-3*864e5).toISOString().split("T")[0],
-            isMenuActive: true, isOrdersActive: true, themeColor: "#dc2626", upiId: "", taxRate: 5, taxIncluded: false, showTax: true, tagline: "Modern Fusion"
-          });
-        }
-      } catch (e) { console.warn(e); }
-    };
-    checkAndSeed();
-
     const unsub = db.collection("restaurants").onSnapshot((snap) => {
-      setRestaurants(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-    }, () => {});
+      if (!snap.empty) {
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setRestaurants(prev => {
+          const map = new Map();
+          DEFAULT_RESTAURANTS.forEach(r => map.set(r.id, r));
+          prev.forEach(r => map.set(r.id, r));
+          list.forEach(r => map.set(r.id, { ...map.get(r.id), ...r }));
+          return Array.from(map.values());
+        });
+      }
+    });
     return () => unsub();
   }, []);
 
-  const currentRestaurant = useMemo(() => restaurants.find((r) => r.id === currentRestId) || null, [restaurants, currentRestId]);
-  
-  useEffect(() => {
-    if (currentRestaurant?.themeColor) {
-      document.documentElement.style.setProperty("--brand", currentRestaurant.themeColor);
-      document.documentElement.style.setProperty("--brand-dark", currentRestaurant.themeColor + "cc");
-    }
-  }, [currentRestaurant?.themeColor]);
+  const currentRestaurant = useMemo(() => 
+    restaurants.find(r => r.id === currentRestId) || restaurants[0], 
+  [restaurants, currentRestId]);
 
-  const handleLogout = () => { clearSession(); window.history.pushState({}, "", "/?restId=" + currentRestId + "&table=" + currentTable); setCurrentView("customer"); };
-  const renewSub = async (restId) => {
-    const curr = restaurants.find((r) => r.id === restId);
-    const base = curr?.dueDate && new Date(curr.dueDate) > new Date() ? new Date(curr.dueDate) : new Date();
-    const newDue = new Date(base.getTime() + 30*864e5).toISOString().split("T")[0];
-    setRestaurants((prev) => prev.map((r) => r.id === restId ? { ...r, subscriptionStatus: "ACTIVE", dueDate: newDue } : r));
-    if (isFB) try { await db.collection("restaurants").doc(restId).update({ subscriptionStatus: "ACTIVE", dueDate: newDue }); } catch(e){}
-  };
-  const addRest = (r) => setRestaurants((prev) => prev.some((x) => x.id === r.id) ? prev.map((x) => x.id === r.id ? { ...x, ...r } : x) : [r, ...prev]);
-  const handleUpdateRestaurant = (updatedData) => { setRestaurants((prev) => prev.map((r) => r.id === currentRestId ? { ...r, ...updatedData } : r)); };
-
-  const ctx = { lang, t, dark, setDark, setLang };
-
-  return React.createElement(LangCtx.Provider, { value: ctx },
-    React.createElement("div", { className: "min-h-screen font-sans" },
-      currentView === "customer" && (currentRestaurant ? React.createElement(CustomerView, { restaurant: currentRestaurant, tableNumber: currentTable }) : React.createElement("div", { className: "flex flex-col items-center justify-center h-screen text-slate-500 space-y-4" }, 
-        React.createElement("h1", { className: "text-2xl font-black" }, "Invalid Restaurant Link"),
-        React.createElement("p", { className: "text-sm" }, "Please scan a valid QR code."),
-        React.createElement("a", { href: "/?staff=true", className: "px-4 py-2 bg-slate-900 text-white rounded-lg font-bold text-sm" }, "Go to Login")
-      )),
-      currentView === "login" && React.createElement(PinLogin, {
-        restaurants, defaultRestId: currentRestId,
-        onSuccess: (s) => { saveSession(s); resetAttempts(); setCurrentRestId(s.restaurantId || currentRestId); setCurrentView(s.role); },
-        onCancel: handleLogout
-      }),
-      currentView === "owner" && currentRestaurant && React.createElement(OwnerView, { restaurant: currentRestaurant, onLogout: handleLogout, onUpdate: handleUpdateRestaurant }),
-      currentView === "kitchen" && currentRestaurant && React.createElement(KitchenView, { restaurant: currentRestaurant, onLogout: handleLogout }),
-      currentView === "admin" && React.createElement(AdminView, { restaurants, onRenew: renewSub, onAdd: addRest, onLogout: handleLogout, setRestaurants })
-    )
+  return (
+    <div className="font-sans antialiased text-stone-900 bg-stone-50 min-h-screen">
+      {view === "customer" && <CustomerView restaurant={currentRestaurant} table={urlTable} />}
+      {view === "login" && (
+        <PinLogin 
+          restaurants={restaurants} 
+          defaultRestId={currentRestId}
+          onSuccess={(role, restId) => {
+            setCurrentRestId(restId || currentRestId);
+            setView(role);
+          }} 
+          onCancel={() => setView("customer")} 
+        />
+      )}
+      {view === "owner" && <OwnerDashboard restaurant={currentRestaurant} onLogout={() => setView("customer")} />}
+      {view === "kitchen" && <KitchenDashboard restaurant={currentRestaurant} onLogout={() => setView("customer")} />}
+      {view === "admin" && <AdminDashboard restaurants={restaurants} setRestaurants={setRestaurants} onLogout={() => setView("customer")} />}
+    </div>
   );
 }
 
-function PinLogin({ restaurants, defaultRestId, onSuccess, onCancel }) {
-  const { t } = useT();
-  const [pin, setPin] = useState("");
-  const [error, setError] = useState("");
-  const [blockTimer, setBlockTimer] = useState(0);
-
-  useEffect(() => {
-    const check = () => { const b = isBlocked(); setBlockTimer(b.blocked ? b.remaining : 0); };
-    check(); const iv = setInterval(check, 500); return () => clearInterval(iv);
-  }, []);
-
-  const onDigit = (d) => { if (pin.length < 6 && blockTimer === 0) { setPin(pin + d); setError(""); } };
-  const onDel = () => setPin(pin.slice(0, -1));
-
-  const verify = async () => {
-    if (isBlocked().blocked) { setError("⛔ Blocked for " + blockTimer + "s"); return; }
-    if (pin === "999999") return onSuccess({ role: "admin" });
-    
-    const curr = restaurants.find((r) => r.id === defaultRestId);
-    if (curr?.ownerPin === pin) return onSuccess({ role: "owner", restaurantId: curr.id });
-    if (curr?.kitchenPin === pin) return onSuccess({ role: "kitchen", restaurantId: curr.id });
-    
-    if (isFB) {
-      for (const r of restaurants) {
-        try {
-          const snap = await db.collection("restaurants").doc(r.id).collection("staff").get();
-          const staff = snap.docs.find((d) => d.data().pin === pin);
-          if (staff) return onSuccess({ role: staff.data().role || "kitchen", restaurantId: r.id });
-        } catch(e) {}
-      }
-    }
-    
-    const ownerR = restaurants.find((r) => r.ownerPin === pin);
-    if (ownerR) return onSuccess({ role: "owner", restaurantId: ownerR.id });
-    const kitchenR = restaurants.find((r) => r.kitchenPin === pin);
-    if (kitchenR) return onSuccess({ role: "kitchen", restaurantId: kitchenR.id });
-
-    const att = recordFail();
-    if (att.blockedUntil) { setError("⛔ " + MAX_ATTEMPTS + " wrong attempts. Blocked 30 sec."); setBlockTimer(30); } 
-    else { setError("Invalid PIN (" + (MAX_ATTEMPTS - att.count) + " tries left)"); }
-    setPin("");
-  };
-
-  return React.createElement("div", { className: "fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4" },
-    React.createElement("div", { className: "glass-card rounded-[32px] p-6 w-full max-w-xs text-center space-y-5 fade-up" },
-      React.createElement("div", { className: "flex justify-between items-center" },
-        React.createElement("span", { className: "text-2xl" }, "🔐"),
-        React.createElement("button", { onClick: onCancel, className: "text-slate-400 text-sm font-bold bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center" }, "✕")
-      ),
-      React.createElement("div", null,
-        React.createElement("h2", { className: "text-xl font-black" }, "Staff Access"),
-        React.createElement("p", { className: "text-xs text-slate-500 font-medium" }, "Enter 6-digit PIN")
-      ),
-      React.createElement("div", { className: "flex justify-center gap-2" },
-        [0,1,2,3,4,5].map((i) => React.createElement("div", { key: i, className: "w-10 h-12 rounded-xl border-2 flex items-center justify-center font-bold text-xl font-mono transition-all " + (pin[i] ? "border-amber-500 bg-amber-50 text-amber-700 scale-105" : "border-slate-200 bg-white") }, pin[i] ? "•" : ""))
-      ),
-      error && React.createElement("p", { className: "text-xs text-red-600 font-bold bg-red-50 p-2 rounded-lg" }, error),
-      React.createElement("div", { className: "grid grid-cols-3 gap-3 pt-2" },
-        [1,2,3,4,5,6,7,8,9].map((n) => React.createElement("button", { key: n, onClick: () => onDigit(String(n)), disabled: blockTimer > 0, className: "py-3.5 rounded-2xl bg-white shadow-sm border border-slate-200 font-bold text-xl disabled:opacity-40 active:scale-95 transition-transform" }, n)),
-        React.createElement("button", { onClick: () => setPin(""), className: "py-3.5 rounded-2xl bg-slate-100 font-bold text-xs text-slate-600 active:scale-95" }, "Clear"),
-        React.createElement("button", { onClick: () => onDigit("0"), disabled: blockTimer > 0, className: "py-3.5 rounded-2xl bg-white shadow-sm border border-slate-200 font-bold text-xl active:scale-95" }, "0"),
-        React.createElement("button", { onClick: onDel, className: "py-3.5 rounded-2xl bg-slate-100 font-bold text-lg text-slate-600 active:scale-95" }, "⌫")
-      ),
-      React.createElement("button", { onClick: verify, disabled: pin.length < 6 || blockTimer > 0, className: "w-full py-4 btn-brand text-sm disabled:bg-slate-300 disabled:shadow-none" }, "Verify")
-    )
-  );
-}
-
-function Sheet({ open, onClose, children, title }) {
-  if (!open) return null;
-  return React.createElement("div", { className: "fixed inset-0 z-50 flex items-end justify-center" },
-    React.createElement("div", { onClick: onClose, className: "absolute inset-0 bg-slate-900/60 backdrop-blur-sm fade-in" }),
-    React.createElement("div", { className: "relative w-full max-w-md bg-white rounded-t-[32px] shadow-2xl max-h-[92vh] flex flex-col sheet-enter", style: { paddingBottom: "env(safe-area-inset-bottom,0)" } },
-      React.createElement("div", { className: "flex justify-center pt-3 pb-2" }, React.createElement("div", { className: "w-12 h-1.5 rounded-full bg-slate-200" })),
-      title && React.createElement("div", { className: "px-6 py-3 border-b border-slate-100 flex justify-between items-center" },
-        React.createElement("h2", { className: "font-black text-xl" }, title),
-        React.createElement("button", { onClick: onClose, className: "w-8 h-8 rounded-full bg-slate-100 text-sm font-bold flex items-center justify-center" }, "✕")
-      ),
-      React.createElement("div", { className: "overflow-y-auto flex-1" }, children)
-    )
-  );
-}
-
-// CUSTOMER VIEW
-function CustomerView({ restaurant, tableNumber }) {
-  const { t, lang, setLang, dark, setDark } = useT();
-  const [menuItems, setMenuItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+// ================= 1. CUSTOMER VIEW =================
+function CustomerView({ restaurant, table }) {
+  const [menu, setMenu] = useState([]);
   const [cart, setCart] = useState([]);
   const [cat, setCat] = useState("All");
   const [search, setSearch] = useState("");
   const [pureVeg, setPureVeg] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
-  const [successOrder, setSuccessOrder] = useState(null);
-  const [myOrders, setMyOrders] = useState([]);
-  const [waiterCalled, setWaiterCalled] = useState(false);
-  const [now, setNow] = useState(Date.now());
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [notes, setNotes] = useState("");
-
-  useEffect(() => { const iv = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(iv); }, []);
+  const [activeOrder, setActiveOrder] = useState(null);
+  const [placedOrder, setPlacedOrder] = useState(null);
+  const [showRating, setShowRating] = useState(false);
+  const [rating, setRating] = useState(5);
 
   useEffect(() => {
-    if (!isFB) { setLoading(false); return; }
-    const unsub = db.collection("restaurants").doc(restaurant.id).collection("menuItems").onSnapshot((snap) => {
-      setMenuItems(snap.docs.map((d) => mapItem(d.id, d.data())));
-      setLoading(false);
-    }, () => setLoading(false));
+    if (!isFB) return;
+    const unsub = db.collection("restaurants").doc(restaurant.id).collection("menuItems").onSnapshot(s => {
+      setMenu(s.docs.map(d => ({ id: d.id, available: true, ...d.data() })));
+    });
     return () => unsub();
   }, [restaurant.id]);
 
   useEffect(() => {
     if (!isFB) return;
-    const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+    const today = new Date(); today.setHours(0,0,0,0);
     const unsub = db.collection("restaurants").doc(restaurant.id).collection("orders")
-      .where("timestamp", ">=", todayStart.getTime())
-      .onSnapshot((snap) => {
-        const orders = snap.docs.map((d) => parseOrder(d.id, d.data()))
-          .filter((o) => String(o.tableNumber) === String(tableNumber))
-          .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        setMyOrders(orders);
-      }, () => {});
+      .where("timestamp", ">=", today.getTime())
+      .onSnapshot(s => {
+        const orders = s.docs.map(d => ({ id: d.id, ...d.data() }))
+          .filter(o => String(o.tableNumber) === String(table) && o.status !== "COMPLETED")
+          .sort((a,b) => b.timestamp - a.timestamp);
+        setActiveOrder(orders[0] || null);
+      });
     return () => unsub();
-  }, [restaurant.id, tableNumber]);
+  }, [restaurant.id, table]);
 
-  const filtered = useMemo(() => menuItems.filter((i) => {
-    if (i.available === false) return false;
-    if (pureVeg && !i.isVegetarian) return false;
-    const s = search.toLowerCase();
-    if (!i.name.toLowerCase().includes(s)) return false;
-    if (cat !== "All") return i.category === cat;
+  const filtered = menu.filter(m => {
+    if (!m.available) return false;
+    if (pureVeg && !m.isVegetarian) return false;
+    if (cat === "Veg" && !m.isVegetarian) return false;
+    if (cat === "Non-Veg" && m.isVegetarian) return false;
+    if (cat !== "All" && cat !== "Veg" && cat !== "Non-Veg" && m.category !== cat) return false;
+    if (search && !m.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
-  }), [menuItems, cat, search, pureVeg]);
+  });
 
-  const itemCount = cart.reduce((s, i) => s + i.qty, 0);
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const taxRate = restaurant.taxRate !== undefined ? restaurant.taxRate : 5;
-  const isTaxIncluded = restaurant.taxIncluded || false;
-  const showTax = restaurant.showTax !== false;
-  
-  let tax = 0;
-  let total = 0;
-  if (isTaxIncluded) { total = subtotal; tax = total * (taxRate / (100 + taxRate)); } 
-  else { tax = subtotal * (taxRate / 100); total = subtotal + tax; }
+  const tax = subtotal * 0.05;
+  const total = subtotal + tax;
+  const itemCount = cart.reduce((s, i) => s + i.qty, 0);
+
+  const handleAdd = (item) => {
+    setCart(p => {
+      const ex = p.find(i => i.id === item.id);
+      if (ex) return p.map(i => i.id === item.id ? { ...i, qty: i.qty + 1 } : i);
+      return [...p, { ...item, qty: 1 }];
+    });
+  };
+  const handleQty = (id, d) => setCart(p => p.map(i => i.id === id ? { ...i, qty: i.qty + d } : i).filter(i => i.qty > 0));
 
   const placeOrder = async () => {
     if (cart.length === 0 || restaurant.isOrdersActive === false) return;
-    const payload = { tokenNumber: "TB-" + Math.floor(100 + Math.random() * 900), tableNumber, items: cart, totalAmount: total, status: "PENDING", paymentStatus: "UNPAID", createdAt: new Date().toISOString(), timestamp: Date.now(), estimatedTime: 15, specialInstructions: notes };
-    if (isFB) try { await db.collection("restaurants").doc(restaurant.id).collection("orders").add(payload); } catch(e) {}
-    setSuccessOrder(payload); setCart([]); setNotes(""); setCartOpen(false);
+    const token = "TB-" + Math.floor(100 + Math.random() * 900);
+    const payload = {
+      tokenNumber: token, tableNumber: table, items: cart, totalAmount: total, 
+      status: "PENDING", specialInstructions: notes.trim(), createdAt: new Date().toISOString(), timestamp: Date.now()
+    };
+    if (isFB) await db.collection("restaurants").doc(restaurant.id).collection("orders").add(payload);
+    setPlacedOrder(payload); setCart([]); setIsCartOpen(false); setShowRating(true);
   };
 
-  const callWaiter = async () => {
-    if (waiterCalled) return; setWaiterCalled(true); playBeep();
-    if (isFB) try { await db.collection("restaurants").doc(restaurant.id).collection("waiterCalls").add({ tableNumber, timestamp: Date.now(), status: "PENDING" }); } catch(e) {}
-    setTimeout(() => setWaiterCalled(false), 30000);
+  const submitRating = async () => {
+    if (placedOrder && isFB) {
+      await db.collection("restaurants").doc(restaurant.id).collection("orders").add({
+        ...placedOrder, status: "COMPLETED", rating: rating, isFeedback: true, timestamp: Date.now()
+      });
+    }
+    setShowRating(false); setPlacedOrder(null);
   };
 
-  const activeOrder = myOrders.find((o) => ["PENDING", "PREPARING", "READY"].includes(o.status));
-  let etaStr = "";
-  if (activeOrder && activeOrder.status !== "READY" && activeOrder.timestamp) {
-    const eta = activeOrder.timestamp + (activeOrder.estimatedTime * 60000);
-    const diff = Math.max(0, Math.floor((eta - now) / 1000));
-    etaStr = diff > 0 ? fmtTime(diff) : "Any moment now";
-  }
+  return (
+    <div className="min-h-screen bg-stone-50 pb-28">
+      {/* Header */}
+      <header className="bg-white border-b border-stone-200 sticky top-0 z-30">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-amber-600 text-white flex items-center justify-center font-black text-lg">
+              {restaurant.name.charAt(0)}
+            </div>
+            <div>
+              <h1 className="font-black text-base text-stone-900 leading-tight">{restaurant.name}</h1>
+              <div className="flex items-center gap-2 text-xs text-stone-500 mt-0.5">
+                <span className="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">Table {table}</span>
+              </div>
+            </div>
+          </div>
+          <button onClick={() => window.location.href = "/?staff=true"} className="text-xs font-bold text-stone-500 bg-stone-100 px-3 py-1.5 rounded-lg">Staff Login</button>
+        </div>
+      </header>
 
-  return React.createElement("div", { className: "min-h-screen bg-slate-50 pb-32" },
-    React.createElement("header", { className: "bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-30" },
-      React.createElement("div", { className: "max-w-4xl mx-auto px-4 py-3 flex justify-between items-center gap-2" },
-        React.createElement("div", { className: "flex items-center gap-3" },
-          restaurant.logo ? React.createElement("img", { src: restaurant.logo, className: "w-11 h-11 rounded-2xl object-cover shadow-sm" }) :
-          React.createElement("div", { className: "w-11 h-11 rounded-2xl text-white flex items-center justify-center font-black text-xl bg-brand shadow-sm" }, restaurant.name.charAt(0)),
-          React.createElement("div", null,
-            React.createElement("h1", { className: "font-black text-lg leading-tight" }, restaurant.name),
-            React.createElement("p", { className: "text-xs font-bold text-brand" }, t("table") + " " + tableNumber)
-          )
-        ),
-        React.createElement("div", { className: "flex gap-2" },
-          React.createElement("button", { onClick: callWaiter, className: `px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm ${waiterCalled ? 'bg-slate-200 text-slate-500' : 'bg-red-50 text-red-600 border border-red-100'}` }, waiterCalled ? "Called ✓" : "🖐️ Waiter"),
-          React.createElement("button", { onClick: () => setDark(!dark), className: "w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-sm" }, dark ? "☀️" : "🌙")
-        )
-      )
-    ),
+      {/* Live Tracker */}
+      {activeOrder && (
+        <div className="max-w-4xl mx-auto px-4 pt-4">
+          <div className="bg-stone-900 text-white rounded-3xl p-4 flex justify-between items-center shadow-lg">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">📡</span>
+              <div>
+                <p className="text-[10px] font-black uppercase text-amber-400">{activeOrder.tokenNumber} • Table {activeOrder.tableNumber}</p>
+                <p className="text-sm font-black">
+                  {activeOrder.status === "PENDING" ? "🔴 Pending (Kitchen)" : activeOrder.status === "PREPARING" ? "🟡 Cooking..." : "🟢 Ready to Serve"}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-    activeOrder && React.createElement("div", { className: "max-w-4xl mx-auto px-4 pt-5" },
-      React.createElement("div", { className: "bg-slate-900 text-white rounded-[24px] p-5 shadow-xl fade-up relative overflow-hidden" },
-        React.createElement("div", { className: "absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-2xl" }),
-        React.createElement("div", { className: "flex justify-between items-start mb-2" },
-          React.createElement("div", null,
-            React.createElement("p", { className: "text-[10px] font-black uppercase tracking-widest text-amber-400" }, activeOrder.tokenNumber),
-            React.createElement("p", { className: "text-lg font-black mt-1" }, activeOrder.status === "PENDING" ? "👨‍🍳 Kitchen Accepted" : activeOrder.status === "PREPARING" ? "🍳 Preparing Food" : "✅ Ready to Serve")
-          ),
-          etaStr && React.createElement("div", { className: "bg-white/10 px-3 py-1.5 rounded-lg text-center" },
-            React.createElement("p", { className: "text-[9px] uppercase font-bold text-slate-300" }, "Est. Time"),
-            React.createElement("p", { className: "font-mono font-bold text-amber-400" }, etaStr)
-          )
-        ),
-        React.createElement("div", { className: "w-full bg-white/20 h-1.5 rounded-full mt-4 overflow-hidden" },
-          React.createElement("div", { className: "h-full bg-amber-500 rounded-full transition-all duration-1000", style: { width: activeOrder.status === "PENDING" ? "33%" : activeOrder.status === "PREPARING" ? "66%" : "100%" } })
-        )
-      )
-    ),
+      {/* Filters */}
+      <div className="max-w-4xl mx-auto px-4 pt-6 space-y-3">
+        <div className="flex gap-2 items-center">
+          <input 
+            type="text" placeholder="Search dishes..." value={search} onChange={e => setSearch(e.target.value)}
+            className="w-full px-4 py-2.5 bg-white border border-stone-200 rounded-2xl text-xs focus:ring-2 focus:ring-amber-500 outline-none"
+          />
+          <label className="flex items-center gap-1.5 bg-white border border-stone-200 rounded-xl px-3 py-2 cursor-pointer shrink-0">
+            <input type="checkbox" checked={pureVeg} onChange={e => setPureVeg(e.target.checked)} className="w-4 h-4 accent-emerald-600" />
+            <span className="text-xs font-bold text-emerald-700">Pure Veg</span>
+          </label>
+        </div>
+        <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+          {["All", "Veg", "Non-Veg", "Mains", "Snacks", "Drinks"].map(c => (
+            <button key={c} onClick={() => setCat(c)} className={`px-4 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap ${cat === c ? "bg-stone-900 text-white" : "bg-white border border-stone-200 text-stone-700"}`}>
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
 
-    React.createElement("div", { className: "max-w-4xl mx-auto px-4 mt-6 space-y-4" },
-      React.createElement("div", { className: "relative" },
-        React.createElement("input", { type: "text", placeholder: t("search"), value: search, onChange: (e) => setSearch(e.target.value), className: "w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-amber-500 outline-none pl-12" }),
-        React.createElement("span", { className: "absolute left-4 top-3.5 text-lg" }, "🔍")
-      ),
-      React.createElement("div", { className: "flex justify-between items-center gap-2" },
-        React.createElement("div", { className: "flex gap-2 overflow-x-auto no-scrollbar py-1 flex-1" },
-          ["All", "Veg", "Non-Veg", "Mains", "Snacks", "Drinks", "Desserts"].map((c) => React.createElement("button", { key: c, onClick: () => setCat(c), className: "px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all " + (cat === c ? "bg-slate-900 text-white shadow-md" : "bg-white text-slate-600 border border-slate-200") }, c))
-        ),
-        React.createElement("label", { className: "flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm" },
-          React.createElement("input", { type: "checkbox", checked: pureVeg, onChange: (e) => setPureVeg(e.target.checked), className: "w-4 h-4 accent-emerald-600 rounded" }),
-          "🥬 Veg"
-        )
-      )
-    ),
+      {/* Menu Items */}
+      <div className="max-w-4xl mx-auto px-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {filtered.map(item => {
+            const qty = cart.find(c => c.id === item.id)?.qty || 0;
+            return (
+              <div key={item.id} className="bg-white rounded-3xl p-3 border border-stone-200 shadow-sm flex gap-4 items-center">
+                <img src={item.image || "https://images.unsplash.com/photo-1546833999-b9f581a1996d"} className="w-24 h-24 rounded-2xl object-cover" />
+                <div className="flex-1 flex flex-col justify-between h-full py-1">
+                  <div>
+                    <h3 className="font-black text-sm text-stone-900">{item.name}</h3>
+                    <p className="text-xs font-bold text-amber-700 mt-1">₹{item.price}</p>
+                    <p className="text-[10px] text-stone-500 line-clamp-1">{item.description}</p>
+                  </div>
+                  <div className="flex justify-end mt-2">
+                    {qty > 0 ? (
+                      <div className="flex items-center gap-2 bg-stone-50 border rounded-xl p-1">
+                        <button onClick={() => handleQty(item.id, -1)} className="w-7 h-7 bg-white rounded-lg font-black shadow-sm">−</button>
+                        <span className="font-black text-xs w-4 text-center">{qty}</span>
+                        <button onClick={() => handleQty(item.id, 1)} className="w-7 h-7 bg-amber-600 text-white rounded-lg font-black shadow-sm">+</button>
+                      </div>
+                    ) : (
+                      <button onClick={() => handleAdd(item)} className="px-4 py-1.5 bg-stone-100 text-stone-900 rounded-xl text-xs font-bold">+ Add</button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
-    React.createElement("div", { className: "max-w-4xl mx-auto px-4 mt-5" },
-      loading ? React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-4" }, [1,2].map((i) => React.createElement("div", { key: i, className: "bg-white rounded-3xl p-4 h-32 skeleton" }))) :
-      React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-4" },
-        filtered.map((item) => {
-          const qty = cart.find((i) => i.id === item.id)?.qty || 0;
-          return React.createElement("div", { key: item.id, className: "bg-white rounded-[24px] p-3.5 flex gap-4 items-center border border-slate-100 shadow-sm relative " + (item.isSoldOut ? "opacity-60 grayscale" : "") },
-            React.createElement("div", { className: "relative" },
-              React.createElement("img", { src: item.imageUrl, className: "w-[100px] h-[100px] rounded-2xl object-cover" }),
-              React.createElement("div", { className: "absolute -top-1 -right-1 bg-white p-1 rounded-md shadow-sm border border-slate-100" },
-                React.createElement("div", { className: "w-2.5 h-2.5 rounded-full " + (item.isVegetarian ? "bg-emerald-500" : "bg-red-500") })
-              )
-            ),
-            React.createElement("div", { className: "flex-1 flex flex-col justify-between h-full py-1" },
-              React.createElement("div", null,
-                React.createElement("h3", { className: "font-black text-sm leading-tight line-clamp-1" }, item.name),
-                React.createElement("p", { className: "text-xs font-bold text-slate-500 mt-1" }, "₹" + item.price)
-              ),
-              React.createElement("div", { className: "flex justify-end mt-2" },
-                item.isSoldOut ? React.createElement("span", { className: "text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-md" }, "Sold Out") :
-                qty > 0 ? React.createElement("div", { className: "flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl p-1" },
-                  React.createElement("button", { onClick: () => setCart(p => p.map(i => i.id===item.id ? {...i, qty:i.qty-1} : i).filter(i=>i.qty>0)), className: "w-7 h-7 rounded-lg bg-white shadow-sm font-black text-slate-700 flex items-center justify-center" }, "−"),
-                  React.createElement("span", { className: "font-black text-xs w-4 text-center" }, qty),
-                  React.createElement("button", { onClick: () => setCart(p => p.find(i=>i.id===item.id) ? p.map(i=>i.id===item.id ? {...i, qty:i.qty+1} : i) : [...p, {...item, qty:1}]), className: "w-7 h-7 rounded-lg bg-brand text-white shadow-sm font-black flex items-center justify-center" }, "+")
-                ) : React.createElement("button", { onClick: () => setCart(p => [...p, {...item, qty:1}]), className: "px-4 py-1.5 bg-slate-100 text-slate-900 rounded-xl text-xs font-bold active:scale-95 transition-transform" }, "+ Add")
-              )
-            )
-          );
-        })
-      )
-    ),
+      {/* Cart Bar */}
+      {itemCount > 0 && (
+        <div className="fixed bottom-4 left-4 right-4 max-w-xl mx-auto z-40">
+          <div onClick={() => setIsCartOpen(true)} className="bg-stone-900 text-white rounded-2xl p-4 flex justify-between items-center cursor-pointer shadow-2xl">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-600 flex items-center justify-center font-black">{itemCount}</div>
+              <div>
+                <p className="font-bold text-xs uppercase tracking-wider text-stone-300">View Cart</p>
+                <p className="font-black font-mono text-sm">₹{total.toFixed(2)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-    itemCount > 0 && React.createElement("div", { className: "fixed bottom-6 left-4 right-4 max-w-xl mx-auto z-40 fade-up" },
-      React.createElement("div", { onClick: () => setCartOpen(true), className: "bg-slate-900 text-white rounded-2xl p-4 flex justify-between items-center cursor-pointer shadow-2xl" },
-        React.createElement("div", { className: "flex items-center gap-3" },
-          React.createElement("div", { className: "w-10 h-10 rounded-xl bg-brand flex items-center justify-center font-black" }, itemCount),
-          React.createElement("div", null, React.createElement("p", { className: "font-bold text-xs text-slate-300" }, "Total"), React.createElement("p", { className: "font-black font-mono" }, "₹" + total.toFixed(2)))
-        ),
-        React.createElement("span", { className: "bg-white/20 px-4 py-2 rounded-xl text-xs font-bold" }, "View Cart")
-      )
-    ),
+      {/* Cart Sheet */}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex justify-end">
+          <div className="bg-white w-full max-w-md h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto">
+            <div>
+              <div className="flex justify-between items-center pb-3 border-b mb-4">
+                <h2 className="font-black text-lg">Your Order</h2>
+                <button onClick={() => setIsCartOpen(false)} className="text-stone-500 text-sm font-bold">✕</button>
+              </div>
+              {cart.map(item => (
+                <div key={item.id} className="flex justify-between items-center bg-stone-50 p-3 rounded-xl mb-2">
+                  <div>
+                    <p className="font-bold text-sm">{item.name}</p>
+                    <p className="font-mono text-xs text-stone-500">₹{item.price} x {item.qty}</p>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white border rounded-lg p-1">
+                    <button onClick={() => handleQty(item.id, -1)} className="w-6 h-6 font-black">−</button>
+                    <span className="text-xs font-bold">{item.qty}</span>
+                    <button onClick={() => handleQty(item.id, 1)} className="w-6 h-6 font-black">+</button>
+                  </div>
+                </div>
+              ))}
+              <textarea rows="2" placeholder="Special Instructions..." value={notes} onChange={e => setNotes(e.target.value)} className="w-full bg-stone-50 border rounded-xl p-3 text-xs mt-3 outline-none" />
+            </div>
+            <div className="border-t pt-4">
+              <div className="flex justify-between text-xs mb-1 text-stone-500"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
+              <div className="flex justify-between text-xs mb-3 text-stone-500"><span>GST (5%)</span><span>₹{tax.toFixed(2)}</span></div>
+              <div className="flex justify-between font-black text-lg mb-4"><span>Total</span><span className="text-amber-700">₹{total.toFixed(2)}</span></div>
+              <button onClick={placeOrder} className="w-full py-4 bg-amber-600 text-white font-black rounded-xl text-sm">Place Order</button>
+            </div>
+          </div>
+        </div>
+      )}
 
-    React.createElement(Sheet, { open: cartOpen, onClose: () => setCartOpen(false), title: "Your Cart" },
-      React.createElement("div", { className: "p-5 space-y-4" },
-        cart.map((item) => React.createElement("div", { key: item.id, className: "flex justify-between items-center" },
-          React.createElement("div", null, React.createElement("p", { className: "font-bold text-sm" }, item.name), React.createElement("p", { className: "text-xs font-mono text-slate-500" }, "₹" + item.price + " x " + item.qty)),
-          React.createElement("div", { className: "flex items-center gap-2 bg-slate-50 border rounded-xl p-1" },
-            React.createElement("button", { onClick: () => setCart(p => p.map(i => i.id===item.id ? {...i, qty:i.qty-1} : i).filter(i=>i.qty>0)), className: "w-7 h-7 bg-white rounded-md shadow-sm font-bold" }, "−"),
-            React.createElement("span", { className: "font-bold text-xs" }, item.qty),
-            React.createElement("button", { onClick: () => setCart(p => p.map(i => i.id===item.id ? {...i, qty:i.qty+1} : i)), className: "w-7 h-7 bg-brand text-white rounded-md shadow-sm font-bold" }, "+")
-          )
-        )),
-        
-        React.createElement("div", { className: "border-t border-slate-100 pt-3 mt-3 space-y-1 text-sm" },
-          React.createElement("div", { className: "flex justify-between text-slate-500" }, React.createElement("span", null, "Subtotal"), React.createElement("span", null, "₹" + subtotal.toFixed(2))),
-          showTax && React.createElement("div", { className: "flex justify-between text-slate-500" },
-            React.createElement("span", null, "GST (" + taxRate + "%) " + (isTaxIncluded ? "[Included]" : "")),
-            React.createElement("span", null, "₹" + tax.toFixed(2))
-          ),
-          React.createElement("div", { className: "flex justify-between font-black text-lg pt-2 border-t border-slate-100 mt-1" }, React.createElement("span", null, "Total"), React.createElement("span", { className: "text-brand" }, "₹" + total.toFixed(2)))
-        ),
-
-        React.createElement("textarea", { rows: "2", placeholder: "Special Instructions (Optional)", value: notes, onChange: (e) => setNotes(e.target.value), className: "w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-amber-500" }),
-        React.createElement("button", { onClick: placeOrder, className: "w-full py-4 btn-brand text-sm mt-2" }, "Place Order • ₹" + total.toFixed(2))
-      )
-    ),
-
-    React.createElement(Sheet, { open: !!successOrder, onClose: () => setSuccessOrder(null) },
-      successOrder && React.createElement("div", { className: "p-8 text-center space-y-4" },
-        React.createElement("div", { className: "w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl font-black" }, "✓"),
-        React.createElement("h2", { className: "text-2xl font-black" }, t("orderPlaced")),
-        React.createElement("p", { className: "text-slate-500 font-mono text-lg font-bold" }, successOrder.tokenNumber),
-        React.createElement("a", { href: `upi://pay?pa=${restaurant.upiId || "merchant@upi"}&pn=${restaurant.name}&am=${total.toFixed(2)}&cu=INR`, target: "_blank", className: "w-full py-3.5 bg-emerald-600 text-white font-bold text-sm rounded-xl mt-4 block shadow-lg shadow-emerald-600/30" }, "📲 Pay ₹" + total.toFixed(2) + " via UPI"),
-        React.createElement("button", { onClick: () => setSuccessOrder(null), className: "w-full py-3 bg-slate-100 font-bold text-sm rounded-xl mt-2" }, "Close")
-      )
-    )
+      {/* Rating Modal */}
+      {showRating && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-xs text-center space-y-4">
+            <h2 className="font-black text-lg">Rate Your Experience</h2>
+            <div className="flex justify-center gap-2 text-3xl">
+              {[1,2,3,4,5].map(s => <button key={s} onClick={() => setRating(s)} className={rating >= s ? "text-amber-500" : "text-stone-300"}>★</button>)}
+            </div>
+            <button onClick={submitRating} className="w-full py-3 bg-amber-600 text-white rounded-xl font-bold text-sm">Submit Rating</button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
-// KITCHEN VIEW
-function KitchenView({ restaurant, onLogout }) {
-  const { t } = useT();
+// ================= 2. KITCHEN VIEW (Light Mode) =================
+function KitchenDashboard({ restaurant, onLogout }) {
   const [orders, setOrders] = useState([]);
   const [now, setNow] = useState(Date.now());
-  const [waiterCalls, setWaiterCalls] = useState([]);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [activeTab, setActiveTab] = useState("PENDING");
-  const audioCtxRef = useRef(null);
-  const alarmIntervalRef = useRef(null);
-
-  useEffect(() => { const iv = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(iv); }, []);
+  const prevIds = useRef(new Set());
 
   useEffect(() => {
-    const unlock = () => { if(!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext||window.webkitAudioContext)(); audioCtxRef.current.resume(); document.removeEventListener('click', unlock); };
-    document.addEventListener('click', unlock);
-    return () => document.removeEventListener('click', unlock);
+    const iv = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(iv);
   }, []);
 
   useEffect(() => {
     if (!isFB) return;
-    const todayStart = new Date(); todayStart.setHours(0,0,0,0);
-    
-    const unsubOrders = db.collection("restaurants").doc(restaurant.id).collection("orders")
-      .where("timestamp", ">=", todayStart.getTime())
-      .onSnapshot((snap) => {
-        const list = snap.docs.map((d) => parseOrder(d.id, d.data()))
-          .filter((o) => !["COMPLETED", "CANCELLED"].includes(o.status))
-          .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0)); // FIFO
+    const today = new Date(); today.setHours(0,0,0,0);
+    const unsub = db.collection("restaurants").doc(restaurant.id).collection("orders")
+      .where("timestamp", ">=", today.getTime())
+      .onSnapshot(s => {
+        const list = s.docs.map(d => ({ id: d.id, ...d.data() }))
+          .filter(o => !["COMPLETED", "CANCELLED"].includes(o.status))
+          .sort((a,b) => a.timestamp - b.timestamp);
+        
         setOrders(list);
+        const pendingIds = new Set(list.filter(o => o.status === "PENDING").map(o => o.id));
+        let hasNew = false;
+        pendingIds.forEach(id => { if (!prevIds.current.has(id)) hasNew = true; });
+        if (hasNew && prevIds.current.size > 0) playBeep();
+        prevIds.current = pendingIds;
       });
-
-    const unsubCalls = db.collection("restaurants").doc(restaurant.id).collection("waiterCalls").onSnapshot((snap) => {
-      setWaiterCalls(snap.docs.map(d => ({id: d.id, ...d.data()})).filter(c => c.status === "PENDING"));
-    });
-
-    return () => { unsubOrders(); unsubCalls(); };
+    return () => unsub();
   }, [restaurant.id]);
 
-  useEffect(() => {
-    const hasPending = orders.some(o => o.status === "PENDING") || waiterCalls.length > 0;
-    if (hasPending && soundEnabled) {
-      if (!alarmIntervalRef.current) {
-        playBeep();
-        alarmIntervalRef.current = setInterval(playBeep, 3000);
-      }
-    } else {
-      if (alarmIntervalRef.current) { clearInterval(alarmIntervalRef.current); alarmIntervalRef.current = null; }
-    }
-    return () => { if (alarmIntervalRef.current) clearInterval(alarmIntervalRef.current); };
-  }, [orders, waiterCalls, soundEnabled]);
-
-  const setStatus = async (id, s) => {
-    setOrders((p) => p.map((o) => o.id === id ? { ...o, status: s } : o));
-    if (isFB) try { await db.collection("restaurants").doc(restaurant.id).collection("orders").doc(id).update({ status: s }); } catch(e) {}
-  };
-
-  const setTime = async (id, mins) => {
-    setOrders((p) => p.map((o) => o.id === id ? { ...o, estimatedTime: mins, status: "PREPARING" } : o));
-    if (isFB) try { await db.collection("restaurants").doc(restaurant.id).collection("orders").doc(id).update({ estimatedTime: mins, status: "PREPARING" }); } catch(e) {}
+  const updateStatus = async (id, status) => {
+    await db.collection("restaurants").doc(restaurant.id).collection("orders").doc(id).update({ status });
   };
 
   const cols = [
-    { key: "PENDING", label: t("newOrders"), icon: "🔔", bg: "bg-red-500" },
-    { key: "PREPARING", label: t("cooking"), icon: "🍳", bg: "bg-amber-500" },
-    { key: "READY", label: t("readyServe"), icon: "✅", bg: "bg-emerald-500" }
+    { key: "PENDING", title: "New Orders", bg: "bg-red-50", border: "border-red-200", btn: "Start Cooking", next: "PREPARING" },
+    { key: "PREPARING", title: "Cooking", bg: "bg-amber-50", border: "border-amber-200", btn: "Mark Ready", next: "READY" },
+    { key: "READY", title: "Ready to Serve", bg: "bg-emerald-50", border: "border-emerald-200", btn: "Complete", next: "COMPLETED" }
   ];
 
-  return React.createElement("div", { className: "min-h-screen bg-slate-950 text-slate-100 flex flex-col" },
-    React.createElement("header", { className: "flex justify-between items-center p-4 border-b border-slate-800 shrink-0" },
-      React.createElement("div", null,
-        React.createElement("h1", { className: "text-xl font-black" }, "🍳 Kitchen"),
-        React.createElement("p", { className: "text-[10px] text-slate-400 font-bold" }, restaurant.name)
-      ),
-      React.createElement("div", { className: "flex gap-2" },
-        React.createElement("button", { onClick: () => setSoundEnabled(!soundEnabled), className: "px-3 py-1.5 rounded-lg text-xs font-bold " + (soundEnabled ? "bg-emerald-600/20 text-emerald-400" : "bg-slate-800 text-slate-400") }, soundEnabled ? "🔔 ON" : "🔕 OFF"),
-        React.createElement("button", { onClick: onLogout, className: "px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-bold" }, "Exit")
-      )
-    ),
-    
-    waiterCalls.length > 0 && React.createElement("div", { className: "m-4 p-3 bg-red-900/50 border border-red-500 rounded-xl flex gap-2 overflow-x-auto no-scrollbar pulse-ring shrink-0" },
-      waiterCalls.map(c => React.createElement("div", { key: c.id, className: "bg-red-950 px-3 py-1.5 rounded-lg flex items-center gap-2 shrink-0" },
-        React.createElement("span", { className: "text-xs font-bold text-red-200" }, "🖐️ T-" + c.tableNumber),
-        React.createElement("button", { onClick: () => db.collection("restaurants").doc(restaurant.id).collection("waiterCalls").doc(c.id).update({status:"RESOLVED"}), className: "bg-red-600 px-2 py-0.5 rounded text-[10px] font-bold" }, "Done")
-      ))
-    ),
+  return (
+    <div className="min-h-screen bg-stone-100 p-4">
+      <header className="flex justify-between items-center pb-4 border-b mb-4">
+        <div>
+          <h1 className="text-xl font-black text-stone-900">Kitchen Display</h1>
+          <p className="text-xs text-stone-500">{restaurant.name}</p>
+        </div>
+        <button onClick={onLogout} className="px-3 py-1.5 bg-white border text-xs font-bold rounded-lg shadow-sm">Exit</button>
+      </header>
 
-    React.createElement("div", { className: "flex md:hidden p-2 gap-2 shrink-0 bg-slate-900" },
-      cols.map(col => {
-        const count = orders.filter(o => o.status === col.key).length;
-        return React.createElement("button", { 
-          key: col.key, 
-          onClick: () => setActiveTab(col.key),
-          className: `flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 ${activeTab === col.key ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-500'}` 
-        }, 
-          col.icon, " ", col.label.split(" ")[0], 
-          count > 0 && React.createElement("span", { className: `px-1.5 py-0.5 rounded-md text-[10px] ${col.bg} text-white` }, count)
-        );
-      })
-    ),
-
-    React.createElement("div", { className: "flex-1 md:grid md:grid-cols-3 gap-4 p-4 overflow-hidden" },
-      cols.map(col => {
-        const list = orders.filter(o => o.status === col.key);
-        const isMobileHidden = activeTab !== col.key;
-        
-        return React.createElement("div", { key: col.key, className: `bg-slate-900 rounded-2xl md:rounded-3xl p-3 md:p-4 border border-slate-800 flex flex-col h-full ${isMobileHidden ? 'hidden md:flex' : 'flex'}` },
-          React.createElement("h2", { className: "hidden md:flex text-xs font-black text-slate-300 tracking-wider mb-4 justify-between" }, col.icon + " " + col.label, React.createElement("span", null, "(" + list.length + ")")),
-          
-          React.createElement("div", { className: "flex-1 overflow-y-auto no-scrollbar space-y-3" },
-            list.length === 0 ? React.createElement("p", { className: "text-xs text-slate-600 text-center py-10" }, "No orders") :
-            list.map((o) => React.createElement("div", { key: o.id, className: "bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 shadow-lg" },
-              React.createElement("div", { className: "flex justify-between items-center" },
-                React.createElement("span", { className: "font-black text-amber-400 font-mono text-lg" }, o.tokenNumber),
-                React.createElement("span", { className: "bg-slate-800 px-2 py-1 rounded-md text-xs font-bold text-slate-300" }, "T-" + o.tableNumber)
-              ),
-              React.createElement("div", { className: "text-sm space-y-1" },
-                o.items.map((i, idx) => React.createElement("div", { key: idx, className: "flex justify-between text-slate-200 font-medium" }, React.createElement("span", null, React.createElement("span", { className: "text-amber-400 font-bold" }, i.qty + "x"), " " + i.name)))
-              ),
-              o.specialInstructions && React.createElement("div", { className: "bg-amber-900/30 text-amber-200 p-2 rounded-lg text-xs border border-amber-700/50" }, "⚠️ " + o.specialInstructions),
-              
-              col.key === "PENDING" && React.createElement("div", { className: "pt-2 border-t border-slate-800" },
-                React.createElement("p", { className: "text-[10px] text-slate-400 mb-2 font-bold" }, "Set Est. Time:"),
-                React.createElement("div", { className: "flex gap-2" },
-                  [10, 15, 20].map(m => React.createElement("button", { key: m, onClick: () => setTime(o.id, m), className: "flex-1 bg-slate-800 hover:bg-slate-700 py-2.5 rounded-lg text-xs font-bold" }, m + "m"))
-                )
-              ),
-              col.key === "PREPARING" && React.createElement("button", { onClick: () => setStatus(o.id, "READY"), className: "w-full py-3.5 rounded-xl bg-emerald-600 text-white font-black text-sm shadow-md shadow-emerald-600/30 active:scale-95" }, "Mark Ready ✓"),
-              col.key === "READY" && React.createElement("button", { onClick: () => setStatus(o.id, "COMPLETED"), className: "w-full py-3.5 rounded-xl bg-slate-700 text-white font-black text-sm active:scale-95" }, "Complete Order")
-            ))
-          )
-        );
-      })
-    )
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {cols.map(col => {
+          const list = orders.filter(o => o.status === col.key);
+          return (
+            <div key={col.key} className={`rounded-2xl p-3 border ${col.bg} ${col.border} min-h-[500px]`}>
+              <h2 className="font-black text-sm text-stone-800 mb-3">{col.title} ({list.length})</h2>
+              <div className="space-y-3">
+                {list.map(o => {
+                  const elapsed = Math.floor((now - o.timestamp) / 1000);
+                  return (
+                    <div key={o.id} className="bg-white rounded-xl p-4 shadow-sm border border-stone-200">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-black font-mono text-amber-700 text-sm">{o.tokenNumber}</span>
+                        <span className="text-xs font-bold bg-stone-100 px-2 py-0.5 rounded">T-{o.tableNumber}</span>
+                      </div>
+                      <div className="text-xs text-stone-600 mb-2 font-mono">⏱ {formatTime(elapsed)}</div>
+                      <div className="space-y-1 mb-3">
+                        {o.items.map((i, idx) => (
+                          <div key={idx} className="flex justify-between text-xs font-medium">
+                            <span>{i.qty}x {i.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                      {o.specialInstructions && <div className="text-[10px] bg-amber-50 text-amber-800 p-2 rounded mb-3">⚠️ {o.specialInstructions}</div>}
+                      <button onClick={() => updateStatus(o.id, col.next)} className="w-full py-2 bg-stone-900 text-white font-bold text-xs rounded-lg">{col.btn}</button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
-// OWNER VIEW
-function OwnerView({ restaurant, onLogout, onUpdate }) {
-  const { t } = useT();
-  const [tab, setTab] = useState("home");
+// ================= 3. OWNER VIEW =================
+function OwnerDashboard({ restaurant, onLogout }) {
+  const [tab, setTab] = useState("menu");
   const [menu, setMenu] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [isClearing, setIsClearing] = useState(false);
-  const [addOpen, setAddOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [form, setForm] = useState({ name: "", price: "", category: "Mains", type: "Veg", image: "", description: "" });
   
-  const [newItem, setNewItem] = useState({ name: "", price: "", type: "Veg", category: "Mains", image: "" });
-  
-  const [branding, setBranding] = useState({ 
-    name: restaurant.name, themeColor: restaurant.themeColor || "#d97706", upiId: restaurant.upiId || "",
-    taxRate: restaurant.taxRate !== undefined ? restaurant.taxRate : 5,
-    taxIncluded: restaurant.taxIncluded || false, showTax: restaurant.showTax !== false,
-    isMenuActive: restaurant.isMenuActive !== false, isOrdersActive: restaurant.isOrdersActive !== false
-  });
+  const [isMenuActive, setIsMenuActive] = useState(restaurant.isMenuActive !== false);
+  const [isOrdersActive, setIsOrdersActive] = useState(restaurant.isOrdersActive !== false);
 
   useEffect(() => {
     if (!isFB) return;
-    const unsubMenu = db.collection("restaurants").doc(restaurant.id).collection("menuItems").onSnapshot((s) => setMenu(s.docs.map((d) => mapItem(d.id, d.data()))));
+    const unsubMenu = db.collection("restaurants").doc(restaurant.id).collection("menuItems").onSnapshot(s => setMenu(s.docs.map(d => ({ id: d.id, ...d.data() }))));
     
-    const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+    const today = new Date(); today.setHours(0,0,0,0);
     const unsubOrders = db.collection("restaurants").doc(restaurant.id).collection("orders")
-      .where("timestamp", ">=", todayStart.getTime())
-      .onSnapshot((s) => setOrders(s.docs.map((d) => parseOrder(d.id, d.data())).sort((a,b) => b.timestamp - a.timestamp)));
+      .where("timestamp", ">=", today.getTime())
+      .onSnapshot(s => setOrders(s.docs.map(d => ({ id: d.id, ...d.data() }))));
       
     return () => { unsubMenu(); unsubOrders(); };
   }, [restaurant.id]);
 
-  const revenue = orders.filter(o => o.status === "COMPLETED").reduce((s, o) => s + o.totalAmount, 0);
-
-  const saveBranding = async () => {
-    if (isFB) try { await db.collection("restaurants").doc(restaurant.id).update(branding); onUpdate(branding); alert("Settings Saved!"); } catch(e) { alert(e.message); }
+  const toggleMenu = async () => {
+    setIsMenuActive(!isMenuActive);
+    await db.collection("restaurants").doc(restaurant.id).update({ isMenuActive: !isMenuActive });
+  };
+  const toggleOrders = async () => {
+    setIsOrdersActive(!isOrdersActive);
+    await db.collection("restaurants").doc(restaurant.id).update({ isOrdersActive: !isOrdersActive });
   };
 
-  const downloadAndClear = async () => {
-    if (!window.confirm("Download all orders as Excel and PERMANENTLY delete them?")) return;
-    setIsClearing(true);
-    try {
-      const snap = await db.collection("restaurants").doc(restaurant.id).collection("orders").get();
-      if (snap.empty) { alert("No orders to clear."); setIsClearing(false); return; }
-      
-      const allOrders = snap.docs.map(d => parseOrder(d.id, d.data()));
-      const ws = XLSX.utils.json_to_sheet(allOrders.map(o => ({ Date: o.createdAt, Token: o.tokenNumber, Table: o.tableNumber, Items: o.items.map(i => i.qty + "x " + i.name).join("; "), Total: o.totalAmount, Status: o.status })));
-      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Orders");
-      XLSX.writeFile(wb, `Orders_Backup_${restaurant.name}_${new Date().toISOString().split("T")[0]}.xlsx`);
-      
-      const chunks = []; for (let i = 0; i < snap.docs.length; i += 500) chunks.push(snap.docs.slice(i, i + 500));
-      for (const chunk of chunks) { const batch = db.batch(); chunk.forEach(doc => batch.delete(doc.ref)); await batch.commit(); }
-      
-      alert("✅ All orders downloaded and database cleared!");
-    } catch (err) { alert("Error: " + err.message); }
-    setIsClearing(false);
-  };
-
-  const handleAddDish = async (e) => {
+  const saveDish = async (e) => {
     e.preventDefault();
-    if (!newItem.name || !newItem.price) return;
-    const data = { name: newItem.name, price: parseFloat(newItem.price), type: newItem.type, category: newItem.category, image: newItem.image || "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80", isVegetarian: newItem.type === "Veg", available: true, isSoldOut: false };
-    if (isFB) await db.collection("restaurants").doc(restaurant.id).collection("menuItems").add(data);
-    setAddOpen(false); setNewItem({ name: "", price: "", type: "Veg", category: "Mains", image: "" });
+    const data = { ...form, price: parseFloat(form.price), isVegetarian: form.type === "Veg", available: true };
+    if (editItem) {
+      await db.collection("restaurants").doc(restaurant.id).collection("menuItems").doc(editItem.id).update(data);
+    } else {
+      await db.collection("restaurants").doc(restaurant.id).collection("menuItems").add(data);
+    }
+    setShowAdd(false); setEditItem(null); setForm({ name: "", price: "", category: "Mains", type: "Veg", image: "", description: "" });
   };
 
-  const handleEditDish = async (e) => {
-    e.preventDefault();
-    if (!editItem.name || !editItem.price) return;
-    const data = { name: editItem.name, price: parseFloat(editItem.price), type: editItem.type, category: editItem.category, image: editItem.imageUrl, isVegetarian: editItem.type === "Veg" };
-    if (isFB) await db.collection("restaurants").doc(restaurant.id).collection("menuItems").doc(editItem.id).update(data);
-    setEditOpen(false); setEditItem(null);
+  const deleteDish = async (id) => {
+    if(window.confirm("Delete this dish?")) await db.collection("restaurants").doc(restaurant.id).collection("menuItems").doc(id).delete();
   };
 
-  const toggleAvail = async (item) => { if (isFB) await db.collection("restaurants").doc(restaurant.id).collection("menuItems").doc(item.id).update({ isSoldOut: !item.isSoldOut }); };
-  const deleteDish = async (id) => { if (window.confirm("Delete this dish?")) if (isFB) await db.collection("restaurants").doc(restaurant.id).collection("menuItems").doc(id).delete(); };
-  const togglePay = async (o) => { if (isFB) await db.collection("restaurants").doc(restaurant.id).collection("orders").doc(o.id).update({ paymentStatus: o.paymentStatus === "PAID" ? "UNPAID" : "PAID" }); };
+  const exportExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(orders.map(o => ({ Token: o.tokenNumber, Table: o.tableNumber, Items: o.items.map(i=>i.name).join(', '), Total: o.totalAmount, Status: o.status })));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Orders");
+    XLSX.writeFile(wb, "Sales_Report.xlsx");
+  };
 
-  const printMenu = () => { window.print(); };
+  return (
+    <div className="min-h-screen bg-stone-50 p-4 pb-20">
+      <header className="flex justify-between items-center pb-4 border-b mb-4">
+        <div>
+          <h1 className="text-xl font-black">{restaurant.name}</h1>
+          <p className="text-xs font-bold text-stone-500 uppercase">Owner Dashboard</p>
+        </div>
+        <button onClick={onLogout} className="px-3 py-1.5 bg-stone-100 font-bold text-xs rounded-lg">Exit</button>
+      </header>
 
-  return React.createElement("div", { className: "min-h-screen bg-slate-50 pb-24" },
-    React.createElement("header", { className: "bg-white border-b px-4 py-4 flex justify-between items-center sticky top-0 z-30" },
-      React.createElement("div", null, React.createElement("h1", { className: "font-black text-xl" }, restaurant.name), React.createElement("p", { className: "text-xs font-bold text-slate-400 uppercase" }, "Owner Panel")),
-      React.createElement("button", { onClick: onLogout, className: "text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-lg" }, "Exit")
-    ),
+      <div className="flex gap-2 mb-6 overflow-x-auto no-scrollbar">
+        {["menu", "orders", "reports", "settings"].map(t => (
+          <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-xl text-xs font-bold capitalize ${tab === t ? "bg-amber-600 text-white" : "bg-white border text-stone-600"}`}>{t}</button>
+        ))}
+      </div>
 
-    React.createElement("div", { className: "max-w-4xl mx-auto p-4 space-y-4" },
-      // HOME TAB
-      tab === "home" && React.createElement("div", { className: "space-y-4" },
-        React.createElement("div", { className: "grid grid-cols-2 gap-3" },
-          React.createElement("div", { className: "bg-white p-4 rounded-3xl border shadow-sm" }, React.createElement("p", { className: "text-xs font-bold text-slate-500" }, "Today's Revenue"), React.createElement("p", { className: "text-2xl font-black text-brand mt-1" }, "₹" + revenue.toFixed(2))),
-          React.createElement("div", { className: "bg-white p-4 rounded-3xl border shadow-sm" }, React.createElement("p", { className: "text-xs font-bold text-slate-500" }, "Active Orders"), React.createElement("p", { className: "text-2xl font-black mt-1" }, orders.filter(o=>o.status!=="COMPLETED").length))
-        ),
-        React.createElement("div", { className: "bg-white p-5 rounded-3xl border shadow-sm space-y-4" },
-          React.createElement("h3", { className: "font-black" }, "Daily Management"),
-          React.createElement("div", { className: "flex justify-between items-center p-3 bg-slate-50 rounded-xl" },
-            React.createElement("span", { className: "text-xs font-bold" }, "Menu Visible"),
-            React.createElement("button", { onClick: () => { const v = !branding.isMenuActive; setBranding({...branding, isMenuActive: v}); saveBranding(); }, className: "px-4 py-1.5 rounded-lg text-xs font-bold " + (branding.isMenuActive ? "bg-emerald-600 text-white" : "bg-slate-300 text-slate-600") }, branding.isMenuActive ? "ON" : "OFF")
-          ),
-          React.createElement("div", { className: "flex justify-between items-center p-3 bg-slate-50 rounded-xl" },
-            React.createElement("span", { className: "text-xs font-bold" }, "Ordering Active"),
-            React.createElement("button", { onClick: () => { const v = !branding.isOrdersActive; setBranding({...branding, isOrdersActive: v}); saveBranding(); }, className: "px-4 py-1.5 rounded-lg text-xs font-bold " + (branding.isOrdersActive ? "bg-emerald-600 text-white" : "bg-rose-600 text-white") }, branding.isOrdersActive ? "ON" : "PAUSED")
-          )
-        ),
-        React.createElement("div", { className: "bg-red-50 p-5 rounded-3xl border border-red-100 shadow-sm space-y-3" },
-          React.createElement("h3", { className: "font-black text-red-600 flex items-center gap-2" }, "⚠️ Database Management"),
-          React.createElement("button", { onClick: downloadAndClear, disabled: isClearing, className: "w-full py-3 btn-danger text-xs disabled:opacity-50" }, isClearing ? "Processing..." : "📥 Download Backup & Clear Database")
-        )
-      ),
+      {tab === "menu" && (
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-black text-lg">Menu ({menu.length})</h2>
+            <button onClick={() => { setEditItem(null); setShowAdd(true); }} className="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold">+ Add Dish</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {menu.map(item => (
+              <div key={item.id} className="bg-white p-3 rounded-2xl border flex justify-between items-center shadow-sm">
+                <div className="flex items-center gap-3">
+                  <img src={item.image || "https://images.unsplash.com/photo-1546833999-b9f581a1996d"} className="w-12 h-12 rounded-lg object-cover" />
+                  <div>
+                    <p className="font-bold text-sm">{item.name}</p>
+                    <p className="text-xs text-amber-700 font-bold">₹{item.price}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => { setForm(item); setEditItem(item); setShowAdd(true); }} className="p-1.5 bg-stone-100 rounded-lg">✏️</button>
+                  <button onClick={() => deleteDish(item.id)} className="p-1.5 bg-red-50 text-red-600 rounded-lg">🗑️</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
-      // MENU TAB
-      tab === "menu" && React.createElement("div", { className: "space-y-3" },
-        React.createElement("div", { className: "flex justify-between items-center mb-2" },
-          React.createElement("h2", { className: "text-lg font-black" }, "Menu (" + menu.length + ")"),
-          React.createElement("button", { onClick: () => setAddOpen(true), className: "px-4 py-2 btn-brand text-xs" }, "+ Add Dish")
-        ),
-        menu.length === 0 ? React.createElement("p", { className: "text-center text-sm text-slate-500 py-10" }, "No dishes yet. Add your first dish!") :
-        menu.map(item => React.createElement("div", { key: item.id, className: "bg-white p-3 rounded-2xl border flex justify-between items-center shadow-sm" },
-          React.createElement("div", { className: "flex items-center gap-3" },
-            React.createElement("img", { src: item.imageUrl, className: "w-12 h-12 rounded-lg object-cover" }),
-            React.createElement("div", null, React.createElement("p", { className: "font-bold text-sm" }, item.name), React.createElement("p", { className: "text-xs text-brand font-bold" }, "₹" + item.price))
-          ),
-          React.createElement("div", { className: "flex gap-2" },
-            React.createElement("button", { onClick: () => toggleAvail(item), className: "px-2 py-1 rounded-lg text-[10px] font-bold " + (item.isSoldOut ? "bg-red-100 text-red-600" : "bg-emerald-100 text-emerald-600") }, item.isSoldOut ? "Sold Out" : "In Stock"),
-            React.createElement("button", { onClick: () => { setEditItem({...item, type: item.isVegetarian ? "Veg" : "Non-Veg"}); setEditOpen(true); }, className: "p-1.5 bg-slate-100 rounded-lg text-slate-700" }, "✏️"),
-            React.createElement("button", { onClick: () => deleteDish(item.id), className: "p-1.5 bg-red-50 rounded-lg text-red-600" }, "🗑️")
-          )
-        ))
-      ),
+      {tab === "orders" && (
+        <div className="space-y-3">
+          <h2 className="font-black text-lg mb-2">Live Orders</h2>
+          {orders.map(o => (
+            <div key={o.id} className="bg-white p-4 rounded-xl border flex justify-between items-center shadow-sm">
+              <div>
+                <p className="font-black text-sm text-amber-700">{o.tokenNumber}</p>
+                <p className="text-xs text-stone-600">Table {o.tableNumber} • ₹{o.totalAmount}</p>
+              </div>
+              <span className="px-2 py-1 bg-stone-100 text-xs font-bold rounded-lg">{o.status}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
-      // REPORTS TAB
-      tab === "reports" && React.createElement("div", { className: "space-y-4" },
-        React.createElement("div", { className: "bg-white p-5 rounded-3xl border shadow-sm" },
-          React.createElement("h3", { className: "font-black mb-3" }, "Sales Reports"),
-          React.createElement("div", { className: "grid grid-cols-2 gap-3" },
-            React.createElement("div", { className: "p-3 bg-slate-50 rounded-xl" }, React.createElement("p", { className: "text-[10px] font-bold text-slate-500" }, "Daily Sales"), React.createElement("p", { className: "font-mono font-bold" }, "₹" + revenue.toFixed(2))),
-            React.createElement("div", { className: "p-3 bg-slate-50 rounded-xl" }, React.createElement("p", { className: "text-[10px] font-bold text-slate-500" }, "Total Orders"), React.createElement("p", { className: "font-mono font-bold" }, orders.length))
-          )
-        ),
-        React.createElement("div", { className: "bg-white p-5 rounded-3xl border shadow-sm" },
-          React.createElement("h3", { className: "font-black mb-3" }, "Order History"),
-          orders.slice(0, 10).map(o => React.createElement("div", { key: o.id, className: "flex justify-between items-center py-2 border-b border-slate-100 last:border-0" },
-            React.createElement("div", null, React.createElement("p", { className: "font-bold text-xs" }, o.tokenNumber), React.createElement("p", { className: "text-[10px] text-slate-500" }, "Table " + o.tableNumber)),
-            React.createElement("div", { className: "text-right" },
-              React.createElement("p", { className: "font-mono font-bold text-xs" }, "₹" + o.totalAmount.toFixed(2)),
-              React.createElement("button", { onClick: () => togglePay(o), className: "text-[10px] font-bold px-2 py-0.5 rounded " + (o.paymentStatus === "PAID" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600") }, o.paymentStatus)
-            )
-          ))
-        ),
-        React.createElement("div", { className: "flex gap-3 pt-2" },
-          React.createElement("button", { onClick: downloadAndClear, className: "flex-1 py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold" }, "📥 Export Excel"),
-          React.createElement("button", { onClick: printMenu, className: "flex-1 py-3 bg-slate-900 text-white rounded-xl text-xs font-bold" }, "🖨️ Print PDF Menu")
-        )
-      ),
+      {tab === "reports" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-white p-4 rounded-xl border"><p className="text-xs font-bold text-stone-500">Total Revenue</p><p className="text-2xl font-black text-amber-700">₹{orders.reduce((s,o)=>s+o.totalAmount,0)}</p></div>
+            <div className="bg-white p-4 rounded-xl border"><p className="text-xs font-bold text-stone-500">Total Orders</p><p className="text-2xl font-black">{orders.length}</p></div>
+          </div>
+          <button onClick={exportExcel} className="w-full py-3 bg-emerald-600 text-white font-bold text-xs rounded-xl">📥 Export to Excel</button>
+        </div>
+      )}
 
-      // SETTINGS TAB
-      tab === "settings" && React.createElement("div", { className: "space-y-4" },
-        React.createElement("div", { className: "bg-white p-5 rounded-3xl border shadow-sm space-y-4" },
-          React.createElement("h3", { className: "font-black" }, "UPI Settings"),
-          React.createElement("input", { type: "text", placeholder: "yourname@upi", value: branding.upiId, onChange: e => setBranding({...branding, upiId: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" })
-        ),
-        React.createElement("div", { className: "bg-white p-5 rounded-3xl border shadow-sm space-y-4" },
-          React.createElement("h3", { className: "font-black" }, "GST / Tax Settings"),
-          React.createElement("label", { className: "text-xs font-bold text-slate-500" }, "Tax Rate (%)"),
-          React.createElement("input", { type: "number", value: branding.taxRate, onChange: e => setBranding({...branding, taxRate: parseFloat(e.target.value) || 0}), className: "w-full border p-3 rounded-xl text-sm" }),
-          React.createElement("label", { className: "flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer" },
-            React.createElement("input", { type: "checkbox", checked: branding.taxIncluded, onChange: e => setBranding({...branding, taxIncluded: e.target.checked}), className: "w-5 h-5 accent-brand" }),
-            React.createElement("span", { className: "text-sm font-bold text-slate-700" }, "Prices include tax (Inclusive)")
-          ),
-          React.createElement("label", { className: "flex items-center gap-3 p-3 bg-slate-50 rounded-xl cursor-pointer" },
-            React.createElement("input", { type: "checkbox", checked: branding.showTax, onChange: e => setBranding({...branding, showTax: e.target.checked}), className: "w-5 h-5 accent-brand" }),
-            React.createElement("span", { className: "text-sm font-bold text-slate-700" }, "Show Tax in Customer Bill")
-          )
-        ),
-        React.createElement("button", { onClick: saveBranding, className: "w-full py-4 btn-brand text-sm" }, "Save All Settings")
-      )
-    ),
+      {tab === "settings" && (
+        <div className="space-y-4">
+          <div className="bg-white p-4 rounded-2xl border flex justify-between items-center">
+            <span className="font-bold text-sm">Menu Visible</span>
+            <button onClick={toggleMenu} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${isMenuActive ? "bg-emerald-600 text-white" : "bg-stone-300"}`}>{isMenuActive ? "ON" : "OFF"}</button>
+          </div>
+          <div className="bg-white p-4 rounded-2xl border flex justify-between items-center">
+            <span className="font-bold text-sm">Accepting Orders</span>
+            <button onClick={toggleOrders} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${isOrdersActive ? "bg-emerald-600 text-white" : "bg-rose-600 text-white"}`}>{isOrdersActive ? "ON" : "PAUSED"}</button>
+          </div>
+        </div>
+      )}
 
-    // ADD DISH SHEET
-    React.createElement(Sheet, { open: addOpen, onClose: () => setAddOpen(false), title: "Add New Dish" },
-      React.createElement("form", { onSubmit: handleAddDish, className: "p-5 space-y-4" },
-        React.createElement("input", { type: "text", placeholder: "Dish Name", required: true, value: newItem.name, onChange: e => setNewItem({...newItem, name: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" }),
-        React.createElement("input", { type: "number", placeholder: "Price (₹)", required: true, value: newItem.price, onChange: e => setNewItem({...newItem, price: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" }),
-        React.createElement("div", { className: "flex gap-3" },
-          React.createElement("select", { value: newItem.type, onChange: e => setNewItem({...newItem, type: e.target.value}), className: "flex-1 border p-3 rounded-xl text-sm bg-white" }, React.createElement("option", { value: "Veg" }, "Veg"), React.createElement("option", { value: "Non-Veg" }, "Non-Veg")),
-          React.createElement("select", { value: newItem.category, onChange: e => setNewItem({...newItem, category: e.target.value}), className: "flex-1 border p-3 rounded-xl text-sm bg-white" }, ["Mains", "Snacks", "Drinks", "Desserts"].map(c => React.createElement("option", { key: c, value: c }, c)))
-        ),
-        React.createElement("div", { className: "p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2" },
-          React.createElement("label", { className: "text-xs font-bold text-slate-500" }, "Image URL OR Upload"),
-          React.createElement("input", { type: "text", placeholder: "Paste image URL here...", value: newItem.image, onChange: e => setNewItem({...newItem, image: e.target.value}), className: "w-full border p-2 rounded-lg text-xs" }),
-          React.createElement("div", { className: "text-center text-[10px] text-slate-400 font-bold" }, "OR"),
-          React.createElement("input", { type: "file", accept: "image/*", onChange: async e => { if(e.target.files[0]) { const b64 = await fileToBase64(e.target.files[0]); setNewItem({...newItem, image: b64}); }}, className: "w-full text-xs" })
-        ),
-        React.createElement("button", { type: "submit", className: "w-full py-4 btn-brand text-sm" }, "Save Dish")
-      )
-    ),
-
-    // EDIT DISH SHEET
-    React.createElement(Sheet, { open: editOpen, onClose: () => setEditOpen(false), title: "Edit Dish" },
-      editItem && React.createElement("form", { onSubmit: handleEditDish, className: "p-5 space-y-4" },
-        React.createElement("input", { type: "text", placeholder: "Dish Name", required: true, value: editItem.name, onChange: e => setEditItem({...editItem, name: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" }),
-        React.createElement("input", { type: "number", placeholder: "Price (₹)", required: true, value: editItem.price, onChange: e => setEditItem({...editItem, price: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" }),
-        React.createElement("div", { className: "flex gap-3" },
-          React.createElement("select", { value: editItem.type, onChange: e => setEditItem({...editItem, type: e.target.value}), className: "flex-1 border p-3 rounded-xl text-sm bg-white" }, React.createElement("option", { value: "Veg" }, "Veg"), React.createElement("option", { value: "Non-Veg" }, "Non-Veg")),
-          React.createElement("select", { value: editItem.category, onChange: e => setEditItem({...editItem, category: e.target.value}), className: "flex-1 border p-3 rounded-xl text-sm bg-white" }, ["Mains", "Snacks", "Drinks", "Desserts"].map(c => React.createElement("option", { key: c, value: c }, c)))
-        ),
-        React.createElement("input", { type: "text", placeholder: "Image URL", value: editItem.imageUrl, onChange: e => setEditItem({...editItem, imageUrl: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" }),
-        React.createElement("button", { type: "submit", className: "w-full py-4 btn-brand text-sm" }, "Update Dish")
-      )
-    ),
-
-    React.createElement("div", { className: "fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-3 pb-safe" },
-      ["home", "menu", "reports", "settings"].map(t => React.createElement("button", { key: t, onClick: () => setTab(t), className: "flex flex-col items-center p-2 text-xs font-bold " + (tab === t ? "text-brand" : "text-slate-400") }, t.toUpperCase()))
-    )
+      {/* Add/Edit Modal */}
+      {showAdd && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <form onSubmit={saveDish} className="bg-white rounded-2xl p-5 w-full max-w-sm space-y-3">
+            <h3 className="font-black text-lg">{editItem ? "Edit" : "Add"} Dish</h3>
+            <input type="text" placeholder="Name" required value={form.name} onChange={e=>setForm({...form, name: e.target.value})} className="w-full border p-2 rounded-xl text-sm" />
+            <input type="number" placeholder="Price" required value={form.price} onChange={e=>setForm({...form, price: e.target.value})} className="w-full border p-2 rounded-xl text-sm" />
+            <textarea placeholder="Description" value={form.description} onChange={e=>setForm({...form, description: e.target.value})} className="w-full border p-2 rounded-xl text-sm" />
+            <input type="text" placeholder="Image URL" value={form.image} onChange={e=>setForm({...form, image: e.target.value})} className="w-full border p-2 rounded-xl text-sm" />
+            <div className="flex gap-2">
+              <select value={form.type} onChange={e=>setForm({...form, type: e.target.value})} className="flex-1 border p-2 rounded-xl text-sm"><option>Veg</option><option>Non-Veg</option></select>
+              <select value={form.category} onChange={e=>setForm({...form, category: e.target.value})} className="flex-1 border p-2 rounded-xl text-sm"><option>Mains</option><option>Snacks</option><option>Drinks</option></select>
+            </div>
+            <div className="flex gap-2 pt-2">
+              <button type="button" onClick={()=>setShowAdd(false)} className="flex-1 py-2 bg-stone-100 rounded-xl text-xs font-bold">Cancel</button>
+              <button type="submit" className="flex-1 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold">Save</button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
   );
 }
 
-// SUPER ADMIN
-function AdminView({ restaurants, onRenew, onAdd, onLogout, setRestaurants }) {
+// ================= 4. SUPER ADMIN VIEW =================
+function AdminDashboard({ restaurants, setRestaurants, onLogout }) {
   const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [clearing, setClearing] = useState(false);
   
-  const [editNameModal, setEditNameModal] = useState(null);
-  const [editDateModal, setEditDateModal] = useState(null);
-  const [pinModal, setPinModal] = useState(null);
-  const [deleteModal, setDeleteModal] = useState(null);
-
-  const generate = async (e) => {
+  const createRest = async (e) => {
     e.preventDefault();
-    if (!name.trim()) return;
-    setLoading(true);
-    const ownerPin = String(Math.floor(100000 + Math.random() * 900000));
-    let kitchenPin = String(Math.floor(100000 + Math.random() * 900000));
-    while (kitchenPin === ownerPin) kitchenPin = String(Math.floor(100000 + Math.random() * 900000));
-    const payload = { name: name.trim(), ownerPin, kitchenPin, subscriptionStatus: "ACTIVE", dueDate: new Date(Date.now() + 30*864e5).toISOString().split("T")[0], isMenuActive: true, isOrdersActive: true, themeColor: "#d97706", upiId: "", taxRate: 5, taxIncluded: false, showTax: true };
-    try {
+    if (!name) return;
+    const oPin = Math.floor(100000 + Math.random() * 900000).toString();
+    const kPin = Math.floor(100000 + Math.random() * 900000).toString();
+    const payload = {
+      name, ownerPin: oPin, kitchenPin: kPin,
+      subscriptionStatus: "ACTIVE", dueDate: new Date(Date.now() + 30*864e5).toISOString().split("T")[0],
+      isMenuActive: true, isOrdersActive: true
+    };
+    if (isFB) {
       const ref = await db.collection("restaurants").add(payload);
-      onAdd({ id: ref.id, ...payload });
-      setPinModal({ id: ref.id, name: name.trim(), ownerPin, kitchenPin });
-      setName("");
-    } catch (e) { alert("Error: " + e.message); }
-    setLoading(false);
+      setRestaurants(prev => [{ id: ref.id, ...payload }, ...prev]);
+    }
+    setName("");
+    alert(`Restaurant Created!\nOwner PIN: ${oPin}\nKitchen PIN: ${kPin}`);
   };
 
-  const clearRestaurantData = async (r) => {
-    if (!window.confirm(`Download backup and PERMANENTLY delete ALL orders for ${r.name}?`)) return;
-    setClearing(true);
-    try {
-      const snap = await db.collection("restaurants").doc(r.id).collection("orders").get();
-      if (snap.empty) { alert("No orders found."); setClearing(false); return; }
-      const allOrders = snap.docs.map(d => parseOrder(d.id, d.data()));
-      const ws = XLSX.utils.json_to_sheet(allOrders.map(o => ({ Date: o.createdAt, Token: o.tokenNumber, Table: o.tableNumber, Items: o.items.map(i => i.qty + "x " + i.name).join("; "), Total: o.totalAmount, Status: o.status })));
-      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Orders");
-      XLSX.writeFile(wb, `Backup_${r.name}_${new Date().toISOString().split("T")[0]}.xlsx`);
-      const chunks = []; for (let i = 0; i < snap.docs.length; i += 500) chunks.push(snap.docs.slice(i, i + 500));
-      for (const chunk of chunks) { const batch = db.batch(); chunk.forEach(doc => batch.delete(doc.ref)); await batch.commit(); }
-      alert(`✅ ${r.name} data cleared!`);
-    } catch (err) { alert("Error: " + err.message); }
-    setClearing(false);
+  const renew = async (id) => {
+    const newDate = new Date(Date.now() + 30*864e5).toISOString().split("T")[0];
+    await db.collection("restaurants").doc(id).update({ subscriptionStatus: "ACTIVE", dueDate: newDate });
   };
 
-  const toggleStatus = async (r) => {
-    const ns = r.subscriptionStatus === "ACTIVE" ? "EXPIRED" : "ACTIVE";
-    setRestaurants(prev => prev.map(x => x.id === r.id ? { ...x, subscriptionStatus: ns } : x));
-    if (isFB) await db.collection("restaurants").doc(r.id).update({ subscriptionStatus: ns });
-  };
+  return (
+    <div className="min-h-screen bg-stone-100 p-4">
+      <header className="flex justify-between items-center pb-4 border-b mb-6">
+        <h1 className="text-xl font-black text-purple-700">Super Admin</h1>
+        <button onClick={onLogout} className="px-3 py-1.5 bg-white border font-bold text-xs rounded-lg">Exit</button>
+      </header>
 
-  const saveName = async () => {
-    setRestaurants(prev => prev.map(x => x.id === editNameModal.id ? { ...x, name: editNameModal.name } : x));
-    if (isFB) await db.collection("restaurants").doc(editNameModal.id).update({ name: editNameModal.name });
-    setEditNameModal(null);
-  };
+      <form onSubmit={createRest} className="bg-white p-4 rounded-2xl border mb-6 max-w-md space-y-3">
+        <h2 className="font-black text-sm">Create New Restaurant</h2>
+        <input type="text" placeholder="Restaurant Name" required value={name} onChange={e => setName(e.target.value)} className="w-full border p-2 rounded-xl text-sm" />
+        <button type="submit" className="w-full py-2 bg-purple-600 text-white font-bold text-xs rounded-xl">Create & Generate PINs</button>
+      </form>
 
-  const saveDate = async () => {
-    setRestaurants(prev => prev.map(x => x.id === editDateModal.id ? { ...x, dueDate: editDateModal.date, subscriptionStatus: "ACTIVE" } : x));
-    if (isFB) await db.collection("restaurants").doc(editDateModal.id).update({ dueDate: editDateModal.date, subscriptionStatus: "ACTIVE" });
-    setEditDateModal(null);
-  };
-
-  const saveCustomPin = async () => {
-    setRestaurants(prev => prev.map(x => x.id === pinModal.id ? { ...x, ownerPin: pinModal.ownerPin, kitchenPin: pinModal.kitchenPin } : x));
-    if (isFB) await db.collection("restaurants").doc(pinModal.id).update({ ownerPin: pinModal.ownerPin, kitchenPin: pinModal.kitchenPin });
-    setPinModal(null); alert("PINs Updated!");
-  };
-
-  const delRest = async () => {
-    if (!deleteModal) return;
-    setRestaurants(prev => prev.filter(x => x.id !== deleteModal.id));
-    if (isFB) await db.collection("restaurants").doc(deleteModal.id).delete();
-    setDeleteModal(null);
-  };
-
-  const copyCustomerLink = (id) => {
-    const link = window.location.origin + window.location.pathname + "?restId=" + id + "&table=1";
-    navigator.clipboard.writeText(link);
-    alert("Customer Link Copied!\n\n" + link);
-  };
-
-  return React.createElement("div", { className: "min-h-screen bg-slate-100 p-4" },
-    React.createElement("header", { className: "flex justify-between items-center pb-4 border-b border-slate-300 mb-4" },
-      React.createElement("h1", { className: "text-xl font-black text-purple-700" }, "Super Admin Power"),
-      React.createElement("button", { onClick: onLogout, className: "text-xs font-bold bg-white px-3 py-1.5 rounded-lg shadow-sm" }, "Exit")
-    ),
-    React.createElement("form", { onSubmit: generate, className: "bg-white p-5 rounded-2xl border shadow-sm space-y-3 max-w-md mb-6" },
-      React.createElement("h2", { className: "font-black" }, "Create New Restaurant"),
-      React.createElement("input", { type: "text", placeholder: "Restaurant Name", value: name, onChange: e => setName(e.target.value), className: "w-full border p-3 rounded-xl text-sm", required: true }),
-      React.createElement("button", { type: "submit", disabled: loading, className: "w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-sm" }, loading ? "Creating..." : "Create & Generate PINs")
-    ),
-    React.createElement("div", { className: "space-y-4 max-w-md pb-10" },
-      React.createElement("h2", { className: "font-black text-sm text-slate-500 uppercase" }, "All Restaurants"),
-      restaurants.map(r => {
-        const isActive = r.subscriptionStatus === "ACTIVE";
-        const days = daysLeft(r.dueDate);
-        return React.createElement("div", { key: r.id, className: "bg-white p-4 rounded-2xl border shadow-sm space-y-3" },
-          React.createElement("div", { className: "flex justify-between items-start" },
-            React.createElement("div", null,
-              React.createElement("p", { className: "font-black text-lg text-slate-900" }, r.name),
-              React.createElement("div", { className: "flex gap-2 mt-1 flex-wrap" },
-                React.createElement("p", { className: "text-[10px] font-mono bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-100" }, "O: " + r.ownerPin),
-                React.createElement("p", { className: "text-[10px] font-mono bg-blue-50 text-blue-800 px-1.5 py-0.5 rounded border border-blue-100" }, "K: " + r.kitchenPin),
-                React.createElement("p", { className: "text-[10px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200" }, "ID: " + r.id)
-              )
-            ),
-            React.createElement("span", { className: `text-[10px] px-2 py-1 rounded-lg font-black ${isActive ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}` }, r.subscriptionStatus)
-          ),
-          React.createElement("div", { className: "flex justify-between items-center py-2 border-y border-slate-100" },
-            React.createElement("p", { className: "text-[11px] font-bold text-slate-500" }, "Expiry: " + (r.dueDate || "N/A")),
-            React.createElement("p", { className: "text-[11px] font-black " + (days < 0 ? "text-red-500" : "text-slate-700") }, days + " days left")
-          ),
-          React.createElement("div", { className: "grid grid-cols-2 gap-2 pt-1" },
-            React.createElement("button", { onClick: () => copyCustomerLink(r.id), className: "py-2 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold shadow-sm col-span-2" }, "🔗 Copy Customer Link"),
-            React.createElement("button", { onClick: () => setEditNameModal({ id: r.id, name: r.name }), className: "py-2 bg-slate-100 rounded-lg text-xs font-bold text-slate-700" }, "✏️ Name"),
-            React.createElement("button", { onClick: () => setEditDateModal({ id: r.id, date: r.dueDate || new Date().toISOString().split("T")[0] }), className: "py-2 bg-slate-100 rounded-lg text-xs font-bold text-slate-700" }, "📅 Date"),
-            React.createElement("button", { onClick: () => setPinModal({ id: r.id, name: r.name, ownerPin: r.ownerPin, kitchenPin: r.kitchenPin }), className: "py-2 bg-amber-100 rounded-lg text-xs font-bold text-amber-700" }, "🔑 PINs"),
-            React.createElement("button", { onClick: () => clearRestaurantData(r), disabled: clearing, className: "py-2 bg-rose-100 rounded-lg text-xs font-bold text-rose-700 disabled:opacity-50" }, "🗄️ Clear Data"),
-            React.createElement("button", { onClick: () => onRenew(r.id), className: "py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow-sm col-span-1" }, "+30 Days"),
-            React.createElement("button", { onClick: () => setDeleteModal({ id: r.id, name: r.name }), className: "py-2 bg-red-600 text-white rounded-lg text-xs font-bold col-span-1" }, "🗑️ Delete")
-          )
-        );
-      })
-    ),
-    editNameModal && React.createElement(Sheet, { open: true, onClose: () => setEditNameModal(null), title: "✏️ Edit Name" },
-      React.createElement("div", { className: "p-6 space-y-4" },
-        React.createElement("input", { type: "text", value: editNameModal.name, onChange: e => setEditNameModal({...editNameModal, name: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" }),
-        React.createElement("button", { onClick: saveName, className: "w-full py-3 bg-slate-900 text-white rounded-xl font-bold" }, "Save Name")
-      )
-    ),
-    editDateModal && React.createElement(Sheet, { open: true, onClose: () => setEditDateModal(null), title: "📅 Edit Date" },
-      React.createElement("div", { className: "p-6 space-y-4" },
-        React.createElement("input", { type: "date", value: editDateModal.date, onChange: e => setEditDateModal({...editDateModal, date: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" }),
-        React.createElement("button", { onClick: saveDate, className: "w-full py-3 bg-slate-900 text-white rounded-xl font-bold" }, "Save Date")
-      )
-    ),
-    pinModal && React.createElement(Sheet, { open: true, onClose: () => setPinModal(null), title: "🔑 Edit PINs" },
-      React.createElement("div", { className: "p-6 space-y-4" },
-        React.createElement("h3", { className: "font-black text-lg text-slate-800" }, pinModal.name),
-        React.createElement("div", { className: "space-y-3" },
-          React.createElement("div", null,
-            React.createElement("label", { className: "text-xs font-bold text-slate-500 uppercase" }, "Owner PIN"),
-            React.createElement("input", { type: "text", maxLength: 6, value: pinModal.ownerPin, onChange: e => setPinModal({...pinModal, ownerPin: e.target.value.replace(/\D/g, "")}), className: "w-full mt-1 border p-3 rounded-xl font-mono text-lg tracking-widest" })
-          ),
-          React.createElement("div", null,
-            React.createElement("label", { className: "text-xs font-bold text-slate-500 uppercase" }, "Kitchen PIN"),
-            React.createElement("input", { type: "text", maxLength: 6, value: pinModal.kitchenPin, onChange: e => setPinModal({...pinModal, kitchenPin: e.target.value.replace(/\D/g, "")}), className: "w-full mt-1 border p-3 rounded-xl font-mono text-lg tracking-widest" })
-          )
-        ),
-        React.createElement("button", { onClick: saveCustomPin, className: "w-full py-3 bg-slate-900 text-white rounded-xl font-bold" }, "Save Custom PINs")
-      )
-    ),
-    deleteModal && React.createElement(Sheet, { open: true, onClose: () => setDeleteModal(null), title: "⚠️ Delete Restaurant" },
-      React.createElement("div", { className: "p-6 text-center space-y-4" },
-        React.createElement("p", { className: "text-sm font-bold text-slate-700" }, "Are you sure you want to delete " + deleteModal.name + "?"),
-        React.createElement("p", { className: "text-xs text-red-500" }, "All menu items and orders will be permanently lost."),
-        React.createElement("button", { onClick: delRest, className: "w-full py-3 btn-danger text-sm" }, "Yes, Delete Permanently")
-      )
-    )
+      <div className="space-y-3 max-w-md">
+        {restaurants.map(r => (
+          <div key={r.id} className="bg-white p-4 rounded-xl border shadow-sm space-y-2">
+            <div className="flex justify-between items-center">
+              <p className="font-bold">{r.name}</p>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${r.subscriptionStatus === "ACTIVE" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>{r.subscriptionStatus}</span>
+            </div>
+            <p className="text-xs text-stone-500 font-mono">Owner: {r.ownerPin} | Kitchen: {r.kitchenPin}</p>
+            <div className="flex gap-2 pt-2">
+              <button onClick={() => renew(r.id)} className="px-3 py-1 bg-indigo-600 text-white text-xs font-bold rounded-lg">+30 Days</button>
+              <a href={`/?restId=${r.id}&table=1`} target="_blank" className="px-3 py-1 bg-stone-100 text-xs font-bold rounded-lg">Open Menu</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
+// ================= 5. PIN LOGIN =================
+function PinLogin({ restaurants, defaultRestId, onSuccess, onCancel }) {
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState("");
+
+  const handleVerify = () => {
+    if (pin === "999999") return onSuccess("admin");
+    const rest = restaurants.find(r => r.id === defaultRestId);
+    if (rest?.ownerPin === pin) return onSuccess("owner", rest.id);
+    if (rest?.kitchenPin === pin) return onSuccess("kitchen", rest.id);
+    
+    const anyOwner = restaurants.find(r => r.ownerPin === pin);
+    if (anyOwner) return onSuccess("owner", anyOwner.id);
+    const anyKitchen = restaurants.find(r => r.kitchenPin === pin);
+    if (anyKitchen) return onSuccess("kitchen", anyKitchen.id);
+
+    setError("Invalid PIN"); setPin("");
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl p-6 w-full max-w-xs text-center space-y-4">
+        <h2 className="font-black text-lg">Staff Access</h2>
+        <p className="text-xs text-stone-500">Enter 6-digit PIN</p>
+        <div className="flex justify-center gap-2">
+          {[0,1,2,3,4,5].map(i => <div key={i} className={`w-9 h-11 rounded-xl border flex items-center justify-center font-bold ${pin[i] ? "border-amber-500 bg-amber-50" : "border-stone-200"}`}>{pin[i] ? "•" : ""}</div>)}
+        </div>
+        {error && <p className="text-xs text-red-600 font-bold">{error}</p>}
+        <div className="grid grid-cols-3 gap-2">
+          {[1,2,3,4,5,6,7,8,9].map(n => <button key={n} onClick={() => pin.length < 6 && setPin(pin + n)} className="py-3 bg-stone-50 rounded-xl font-bold text-lg">{n}</button>)}
+          <button onClick={() => setPin("")} className="py-3 bg-stone-50 rounded-xl text-xs text-stone-500 font-bold">Clear</button>
+          <button onClick={() => pin.length < 6 && setPin(pin + "0")} className="py-3 bg-stone-50 rounded-xl font-bold text-lg">0</button>
+          <button onClick={() => setPin(pin.slice(0, -1))} className="py-3 bg-stone-50 rounded-xl font-bold">⌫</button>
+        </div>
+        <button onClick={handleVerify} disabled={pin.length < 6} className="w-full py-3 bg-amber-600 text-white rounded-xl font-bold text-sm disabled:bg-stone-300">Verify</button>
+        <button onClick={onCancel} className="text-xs text-stone-400 font-bold pt-2">Cancel</button>
+      </div>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
 </script>
 </body>
 </html>
