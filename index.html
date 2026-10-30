@@ -75,14 +75,17 @@ window.onerror = function(msg) {
 <script>
 const { useState, useEffect, useMemo, useRef, createContext, useContext } = React;
 
+// तुझा Firebase Config इथे टाकला आहे
 const firebaseConfig = {
-  apiKey: "AIzaSyDL_AyEqLAZ7mafIN3J5AMV2n3uShEeW8",
+  apiKey: "AIzaSyDL_AyEqlAZr7mafIN3J5AMV2n3uShEeW8",
   authDomain: "menu-qr-b8765.firebaseapp.com",
   projectId: "menu-qr-b8765",
   storageBucket: "menu-qr-b8765.firebasestorage.app",
   messagingSenderId: "71280897038",
   appId: "1:71280897038:web:180294fd94d32e6f11205f",
+  measurementId: "G-TNKM262EVG"
 };
+
 let app = null, db = null, isFB = false;
 try { app = firebase.initializeApp(firebaseConfig); db = firebase.firestore(); isFB = true; }
 catch (e) { console.warn("FB offline:", e); }
@@ -937,9 +940,8 @@ function AdminView({ restaurants, onRenew, onAdd, onLogout, setRestaurants }) {
     setDeleteModal(null);
   };
 
-  // NEW: COPY CUSTOMER LINK FUNCTION
   const copyCustomerLink = (id) => {
-    const link = window.location.origin + "/?restId=" + id + "&table=1";
+    const link = window.location.origin + window.location.pathname + "?restId=" + id + "&table=1";
     navigator.clipboard.writeText(link);
     alert("Customer Link Copied!\n\n" + link);
   };
