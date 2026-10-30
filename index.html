@@ -88,8 +88,8 @@ try { app = firebase.initializeApp(firebaseConfig); db = firebase.firestore(); i
 catch (e) { console.warn("FB offline:", e); }
 
 const I18N = {
-  en: { menu:"Menu", cart:"Cart", orders:"Orders", reports:"Reports", settings:"Settings", home:"Home", addToCart:"Add", placeOrder:"Place Order", search:"Search dishes...", table:"Table", total:"Total", pending:"Pending", preparing:"Cooking", ready:"Ready", completed:"Completed", cancel:"Cancel", delete:"Delete", edit:"Edit", save:"Save", logout:"Logout", active:"Active", expired:"Expired", staff:"Staff", revenue:"Revenue", today:"Today", week:"7 Days", month:"30 Days", addDish:"Add Dish", dishName:"Dish Name", price:"Price", category:"Category", description:"Description", uploadImage:"Upload from Gallery (Compressed)", imgUrl:"Or Paste Image URL (Saves Space)", markPaid:"Mark Paid", markUnpaid:"Mark Unpaid", archive:"Download & Clear", exportXLSX:"Export Excel", printMenu:"Print Menu", orderPlaced:"Order Placed!", estTime:"Estimated Time", mins:"mins", reorder:"Reorder", callWaiter:"Call Waiter", waiterCalled:"Waiter Called", gst:"GST/Tax Rate (%)", showTax:"Show Tax in Bill", taxIncluded:"Prices include tax (Inclusive)", newOrders:"NEW ORDERS", cooking:"COOKING", readyServe:"READY TO SERVE" },
-  mr: { menu:"मेनू", cart:"कार्ट", orders:"ऑर्डर्स", reports:"रिपोर्ट्स", settings:"सेटिंग्ज", home:"होम", addToCart:"घाला", placeOrder:"ऑर्डर करा", search:"डिश शोधा...", table:"टेबल", total:"एकूण", pending:"प्रलंबित", preparing:"तयार होतंय", ready:"तयार", completed:"पूर्ण", cancel:"रद्द", delete:"काढा", edit:"बदला", save:"जतन करा", logout:"बाहेर पडा", active:"सक्रिय", expired:"कालबाह्य", staff:"स्टाफ", revenue:"उत्पन्न", today:"आज", week:"७ दिवस", month:"३० दिवस", addDish:"डिश जोडा", dishName:"डिशचं नाव", price:"किंमत", category:"प्रकार", description:"माहिती", uploadImage:"गॅलरीतून फोटो (कॉम्प्रेस होईल)", imgUrl:"इमेज लिंक टाका (जागा वाचवण्यासाठी)", markPaid:"पैसे मिळाले", markUnpaid:"पैसे बाकी", archive:"डाउनलोड आणि हिस्ट्री डिलीट", exportXLSX:"Excel काढा", printMenu:"मेनू प्रिंट", orderPlaced:"ऑर्डर झाली!", estTime:"अंदाजे वेळ", mins:"मिनिटे", reorder:"पुन्हा ऑर्डर", callWaiter:"वेटर बोलवा", waiterCalled:"वेटरला सांगितलं", gst:"GST/कर दर (%)", showTax:"बिलात कर दाखवा", taxIncluded:"किंमतीत कर समाविष्ट आहे", newOrders:"नवीन ऑर्डर्स", cooking:"किचनमध्ये", readyServe:"सर्व्ह करायला तयार" },
+  en: { menu:"Menu", cart:"Cart", orders:"Orders", settings:"Settings", home:"Home", addToCart:"Add", placeOrder:"Place Order", search:"Search dishes...", table:"Table", total:"Total", pending:"Pending", preparing:"Cooking", ready:"Ready", completed:"Completed", cancel:"Cancel", delete:"Delete", edit:"Edit", save:"Save", logout:"Logout", active:"Active", expired:"Expired", staff:"Staff", revenue:"Revenue", addDish:"Add Dish", dishName:"Dish Name", price:"Price", category:"Category", description:"Description", uploadImage:"Gallery (Compressed)", imgUrl:"Image URL (Saves Space)", markPaid:"Mark Paid", markUnpaid:"Mark Unpaid", archive:"Download & Clear", exportXLSX:"Export Excel", orderPlaced:"Order Placed!", newOrders:"NEW ORDERS", cooking:"COOKING", readyServe:"READY" },
+  mr: { menu:"मेनू", cart:"कार्ट", orders:"ऑर्डर्स", settings:"सेटिंग्ज", home:"होम", addToCart:"घाला", placeOrder:"ऑर्डर करा", search:"डिश शोधा...", table:"टेबल", total:"एकूण", pending:"प्रलंबित", preparing:"तयार होतंय", ready:"तयार", completed:"पूर्ण", cancel:"रद्द", delete:"काढा", edit:"बदला", save:"जतन करा", logout:"बाहेर पडा", active:"सक्रिय", expired:"कालबाह्य", staff:"स्टाफ", revenue:"उत्पन्न", addDish:"डिश जोडा", dishName:"डिशचं नाव", price:"किंमत", category:"प्रकार", description:"माहिती", uploadImage:"गॅलरीतून फोटो", imgUrl:"इमेज लिंक टाका", markPaid:"पैसे मिळाले", markUnpaid:"पैसे बाकी", archive:"डाउनलोड आणि हिस्ट्री डिलीट", exportXLSX:"Excel काढा", orderPlaced:"ऑर्डर झाली!", newOrders:"नवीन ऑर्डर्स", cooking:"किचनमध्ये", readyServe:"तयार" },
 };
 const LangCtx = createContext({ lang: "en", t: (k)=>I18N.en[k]||k });
 const useT = () => useContext(LangCtx);
@@ -110,7 +110,6 @@ function isBlocked() { const a = getAttempts(); if (a.blockedUntil && a.blockedU
 const daysLeft = (d) => { if(!d) return 0; return Math.ceil((new Date(d).getTime() - Date.now())/864e5); };
 const fmtTime = (s) => String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
 function playBeep() { try { const c = new (window.AudioContext||window.webkitAudioContext)(); [880, 1100].forEach((f,i) => { const o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.frequency.value = f; o.type = "sine"; g.gain.setValueAtTime(0.4, c.currentTime + i*0.25); g.gain.exponentialRampToValueAtTime(0.01, c.currentTime + i*0.25 + 0.4); o.start(c.currentTime + i*0.25); o.stop(c.currentTime + i*0.25 + 0.4); }); } catch(e){} }
-// Aggressive image compression to save Firebase space
 function fileToBase64(file, maxSize=150) { return new Promise((resolve) => { const r = new FileReader(); r.onload = (e) => { const img = new Image(); img.onload = () => { const c = document.createElement("canvas"); let w = img.width, h = img.height; if (w > maxSize || h > maxSize) { const ratio = Math.min(maxSize/w, maxSize/h); w *= ratio; h *= ratio; } c.width = w; c.height = h; c.getContext("2d").drawImage(img, 0, 0, w, h); resolve(c.toDataURL("image/jpeg", 0.3)); }; img.src = e.target.result; }; r.readAsDataURL(file); }); }
 
 const mapItem = (id, d) => ({ id: id || d.id, name: d.name || "Untitled", description: d.description || "", price: typeof d.price === "number" ? d.price : parseFloat(d.price) || 0, category: d.category || "Mains", imageUrl: d.image || d.imageUrl || "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80", isVegetarian: d.type === "veg" || d.isVegetarian === true, isSoldOut: d.isSoldOut === true, available: d.available !== false });
@@ -195,7 +194,11 @@ function App() {
 
   return React.createElement(LangCtx.Provider, { value: ctx },
     React.createElement("div", { className: "min-h-screen font-sans" },
-      currentView === "customer" && (currentRestaurant ? React.createElement(CustomerView, { restaurant: currentRestaurant, tableNumber: currentTable }) : React.createElement("div", { className: "flex items-center justify-center h-screen font-bold text-slate-500" }, "Invalid Restaurant Link")),
+      currentView === "customer" && (currentRestaurant ? React.createElement(CustomerView, { restaurant: currentRestaurant, tableNumber: currentTable }) : React.createElement("div", { className: "flex flex-col items-center justify-center h-screen text-slate-500 space-y-4" }, 
+        React.createElement("h1", { className: "text-2xl font-black" }, "Invalid Restaurant Link"),
+        React.createElement("p", { className: "text-sm" }, "Please scan a valid QR code."),
+        React.createElement("a", { href: "/?staff=true", className: "px-4 py-2 bg-slate-900 text-white rounded-lg font-bold text-sm" }, "Go to Login")
+      )),
       currentView === "login" && React.createElement(PinLogin, {
         restaurants, defaultRestId: currentRestId,
         onSuccess: (s) => { saveSession(s); resetAttempts(); setCurrentRestId(s.restaurantId || currentRestId); setCurrentView(s.role); },
@@ -529,7 +532,7 @@ function KitchenView({ restaurant, onLogout }) {
       .onSnapshot((snap) => {
         const list = snap.docs.map((d) => parseOrder(d.id, d.data()))
           .filter((o) => !["COMPLETED", "CANCELLED"].includes(o.status))
-          .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0)); // Oldest first (FIFO)
+          .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0)); // Oldest first
         setOrders(list);
       });
 
@@ -540,7 +543,6 @@ function KitchenView({ restaurant, onLogout }) {
     return () => { unsubOrders(); unsubCalls(); };
   }, [restaurant.id]);
 
-  // LOUD LOOPING ALARM LOGIC
   useEffect(() => {
     const hasPending = orders.some(o => o.status === "PENDING") || waiterCalls.length > 0;
     if (hasPending && soundEnabled) {
@@ -604,7 +606,6 @@ function KitchenView({ restaurant, onLogout }) {
       })
     ),
 
-    // DESKTOP COLUMNS + MOBILE LIST
     React.createElement("div", { className: "flex-1 md:grid md:grid-cols-3 gap-4 p-4 overflow-hidden" },
       cols.map(col => {
         const list = orders.filter(o => o.status === col.key);
@@ -641,13 +642,15 @@ function KitchenView({ restaurant, onLogout }) {
   );
 }
 
-// OWNER VIEW
+// OWNER VIEW (Now with Add Dish Button)
 function OwnerView({ restaurant, onLogout, onUpdate }) {
   const { t } = useT();
   const [tab, setTab] = useState("home");
   const [menu, setMenu] = useState([]);
   const [orders, setOrders] = useState([]);
   const [isClearing, setIsClearing] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
+  const [newItem, setNewItem] = useState({ name: "", price: "", type: "Veg", category: "Mains", image: "" });
   
   const [branding, setBranding] = useState({ 
     name: restaurant.name, 
@@ -700,6 +703,25 @@ function OwnerView({ restaurant, onLogout, onUpdate }) {
     setIsClearing(false);
   };
 
+  const handleAddDish = async (e) => {
+    e.preventDefault();
+    if (!newItem.name || !newItem.price) return;
+    const data = { 
+      name: newItem.name, 
+      price: parseFloat(newItem.price), 
+      type: newItem.type, 
+      category: newItem.category, 
+      image: newItem.image || "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80", 
+      isVegetarian: newItem.type === "Veg", 
+      available: true 
+    };
+    if (isFB) {
+      await db.collection("restaurants").doc(restaurant.id).collection("menuItems").add(data);
+    }
+    setAddOpen(false);
+    setNewItem({ name: "", price: "", type: "Veg", category: "Mains", image: "" });
+  };
+
   return React.createElement("div", { className: "min-h-screen bg-slate-50 pb-24" },
     React.createElement("header", { className: "bg-white border-b px-4 py-4 flex justify-between items-center sticky top-0 z-30" },
       React.createElement("div", null,
@@ -729,6 +751,11 @@ function OwnerView({ restaurant, onLogout, onUpdate }) {
       ),
 
       tab === "menu" && React.createElement("div", { className: "space-y-3" },
+        React.createElement("div", { className: "flex justify-between items-center mb-2" },
+          React.createElement("h2", { className: "text-lg font-black" }, "Menu (" + menu.length + ")"),
+          React.createElement("button", { onClick: () => setAddOpen(true), className: "px-4 py-2 btn-brand text-xs" }, "+ Add Dish")
+        ),
+        menu.length === 0 ? React.createElement("p", { className: "text-center text-sm text-slate-500 py-10" }, "No dishes yet. Add your first dish!") :
         menu.map(item => React.createElement("div", { key: item.id, className: "bg-white p-3 rounded-2xl border flex justify-between items-center" },
           React.createElement("div", { className: "flex items-center gap-3" },
             React.createElement("img", { src: item.imageUrl, className: "w-12 h-12 rounded-lg object-cover" }),
@@ -757,6 +784,29 @@ function OwnerView({ restaurant, onLogout, onUpdate }) {
           )
         ),
         React.createElement("button", { onClick: saveBranding, className: "w-full py-4 btn-brand text-sm" }, "Save All Settings")
+      )
+    ),
+
+    React.createElement(Sheet, { open: addOpen, onClose: () => setAddOpen(false), title: "Add New Dish" },
+      React.createElement("form", { onSubmit: handleAddDish, className: "p-5 space-y-4" },
+        React.createElement("input", { type: "text", placeholder: "Dish Name", required: true, value: newItem.name, onChange: e => setNewItem({...newItem, name: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" }),
+        React.createElement("input", { type: "number", placeholder: "Price (₹)", required: true, value: newItem.price, onChange: e => setNewItem({...newItem, price: e.target.value}), className: "w-full border p-3 rounded-xl text-sm" }),
+        React.createElement("div", { className: "flex gap-3" },
+          React.createElement("select", { value: newItem.type, onChange: e => setNewItem({...newItem, type: e.target.value}), className: "flex-1 border p-3 rounded-xl text-sm bg-white" },
+            React.createElement("option", { value: "Veg" }, "Veg"),
+            React.createElement("option", { value: "Non-Veg" }, "Non-Veg")
+          ),
+          React.createElement("select", { value: newItem.category, onChange: e => setNewItem({...newItem, category: e.target.value}), className: "flex-1 border p-3 rounded-xl text-sm bg-white" },
+            ["Mains", "Snacks", "Drinks", "Desserts"].map(c => React.createElement("option", { key: c, value: c }, c))
+          )
+        ),
+        React.createElement("div", { className: "p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2" },
+          React.createElement("label", { className: "text-xs font-bold text-slate-500" }, "Image URL (Link) OR Upload"),
+          React.createElement("input", { type: "text", placeholder: "Paste image URL here...", value: newItem.image, onChange: e => setNewItem({...newItem, image: e.target.value}), className: "w-full border p-2 rounded-lg text-xs" }),
+          React.createElement("div", { className: "text-center text-[10px] text-slate-400 font-bold" }, "OR"),
+          React.createElement("input", { type: "file", accept: "image/*", onChange: async e => { if(e.target.files[0]) { const b64 = await fileToBase64(e.target.files[0]); setNewItem({...newItem, image: b64}); }}, className: "w-full text-xs" })
+        ),
+        React.createElement("button", { type: "submit", className: "w-full py-4 btn-brand text-sm" }, "Save Dish")
       )
     ),
 
@@ -791,7 +841,7 @@ function AdminView({ restaurants, onRenew, onAdd, onLogout, setRestaurants }) {
     try {
       const ref = await db.collection("restaurants").add(payload);
       onAdd({ id: ref.id, ...payload });
-      setPinModal({ name: name.trim(), ownerPin, kitchenPin });
+      setPinModal({ id: ref.id, name: name.trim(), ownerPin, kitchenPin });
       setName("");
     } catch (e) {
       alert("Error: " + e.message);
@@ -889,10 +939,10 @@ function AdminView({ restaurants, onRenew, onAdd, onLogout, setRestaurants }) {
           ),
 
           React.createElement("div", { className: "grid grid-cols-2 gap-2 pt-1" },
-            React.createElement("button", { onClick: () => setEditNameModal({ id: r.id, name: r.name }), className: "py-2 bg-slate-100 rounded-lg text-xs font-bold text-slate-700" }, "✏️ Edit Name"),
-            React.createElement("button", { onClick: () => setEditDateModal({ id: r.id, date: r.dueDate || new Date().toISOString().split("T")[0] }), className: "py-2 bg-slate-100 rounded-lg text-xs font-bold text-slate-700" }, "📅 Edit Date"),
-            React.createElement("button", { onClick: () => setPinModal({ id: r.id, name: r.name, ownerPin: r.ownerPin, kitchenPin: r.kitchenPin }), className: "py-2 bg-amber-100 rounded-lg text-xs font-bold text-amber-700" }, "🔑 Edit PINs"),
-            React.createElement("button", { onClick: () => clearRestaurantData(r), disabled: clearing, className: "py-2 bg-rose-100 rounded-lg text-xs font-bold text-rose-700 disabled:opacity-50" }, "🗄️ Backup & Clear"),
+            React.createElement("button", { onClick: () => setEditNameModal({ id: r.id, name: r.name }), className: "py-2 bg-slate-100 rounded-lg text-xs font-bold text-slate-700" }, "✏️ Name"),
+            React.createElement("button", { onClick: () => setEditDateModal({ id: r.id, date: r.dueDate || new Date().toISOString().split("T")[0] }), className: "py-2 bg-slate-100 rounded-lg text-xs font-bold text-slate-700" }, "📅 Date"),
+            React.createElement("button", { onClick: () => setPinModal({ id: r.id, name: r.name, ownerPin: r.ownerPin, kitchenPin: r.kitchenPin }), className: "py-2 bg-amber-100 rounded-lg text-xs font-bold text-amber-700" }, "🔑 PINs"),
+            React.createElement("button", { onClick: () => clearRestaurantData(r), disabled: clearing, className: "py-2 bg-rose-100 rounded-lg text-xs font-bold text-rose-700 disabled:opacity-50" }, "🗄️ Clear Data"),
             React.createElement("button", { onClick: () => onRenew(r.id), className: "py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow-sm col-span-1" }, "+30 Days"),
             React.createElement("button", { onClick: () => setDeleteModal({ id: r.id, name: r.name }), className: "py-2 bg-red-600 text-white rounded-lg text-xs font-bold col-span-1" }, "🗑️ Delete")
           )
